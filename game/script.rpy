@@ -30,6 +30,7 @@ e "Your decisions will shape the nation."
     e "OFUck youry, pictures, and music, you can release it to the world!"
 
     e "you are retarded"
+    e "STOP LOOKING AT MY SCREEN"
     # This ends the game.
 
     return
