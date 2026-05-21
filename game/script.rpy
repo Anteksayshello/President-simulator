@@ -4,7 +4,7 @@
 # name of the character.
 
 define e = Character("Eileen")
-
+define p = character("President")
 
 # The game starts here.
 
@@ -26,7 +26,7 @@ label start:
 
     e "You've created aaffa Ren'Py game."
     e "Welcome to President Simulator."
-e "Your decisions will shape the nation."
+    e "Your decisions will shape the nation."
     e "OFUck youry, pictures, and music, you can release it to the world!"
 
     e "you are retarded"
