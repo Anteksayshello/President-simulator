@@ -24,10 +24,12 @@ label start:
 
     # These display lines of dialogue.
 
-    e "You've created a new Ren'Py game."
+    e "You've created aaffa Ren'Py game."
+    e "Welcome to President Simulator."
+e "Your decisions will shape the nation."
+    e "OFUck youry, pictures, and music, you can release it to the world!"
 
-    e "Once you add a story, pictures, and music, you can release it to the world!"
-
+    e "you are retarded"
     # This ends the game.
 
     return
