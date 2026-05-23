@@ -3,10 +3,10 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
-define p = character("President")
-define vc = character("Vice President")
-define n = character("Narrator")
+
+define p = Character("President")
+define vc = Character("Vice President")
+define n = Character("Narrator")
 
 default education = 65
 default national_budget = 1000000000000
@@ -34,7 +34,7 @@ label start:
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
     
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
-
+    p "Hello Vice President, I am ready to listen to your proposal"
     vc "Would you like to invest in education?"
 
     menu:
@@ -44,8 +44,15 @@ label start:
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
             vc "You have decided not to invest into education, this resulted in you not decreasing the national budget but also not increasing the education level of the country."
-   
-   vc "Would you like to invest in infrastructure?"
+    
+    vc "Would you like to invest in infrastructure?"
+    
+    menu:
+        "Approve":
+            vc "You have invested in infrastructure."
+        "Decline":
+            vc "You have declined to invest in infrastructure."
+    
     # This ends the game 
 
     return
