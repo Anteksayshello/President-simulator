@@ -8,8 +8,21 @@ define p = Character("President")
 define vc = Character("Vice President")
 define n = Character("Narrator")
 
-default education = 65
-default national_budget = 1000000000000
+default education = 60
+default GDP = 1000000000000
+default welfare = 60
+default inhabitants = 40000000
+default corruption = 5
+default Education = 60
+default Popularity = 60
+default ideology = 60
+default power = 60
+default taxes = 20000000000
+
+default days = 0
+
+
+
 
 screen stats():
 
@@ -61,19 +74,72 @@ label start:
     menu:
         "Approve":
             $ education += 5
-            $ national_budget -= 10000000
+            $ GDP -= 10000000000
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
-            vc "You have decided not to invest into education, this resulted in you not decreasing the national budget but also not increasing the education level of the country."
+            vc "You have declined to invest in education."
     
     vc "Would you like to invest in infrastructure?"
     
     menu:
         "Approve":
             vc "You have invested in infrastructure."
+            $ GDP -= 25000000000
+            $ welfare += 5
         "Decline":
             vc "You have declined to invest in infrastructure."
     
+    vc "would you like to promote equal rights?"
+
+    menu: 
+        "Approve":
+            vc "You have decided to promote equal rights, this will increase the welfare of the country but will also decrease the national budget."
+            $ popularity += 10
+            $ GDP -= 15000000000
+        "Decline":
+            vc "You have declined to promote equal rights."
+            
+    vc "Would you like to invest in better housing?"
+
+label ass:
+    vc "Would you like to Assinate people that fight for equal rights?"
+    menu:
+        "Approve":
+            vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government.
+            $ popularity -= 10
+        jump fas
+        "Decline":
+            vc "You have declined to assinate people that fight for equal rights."
+    
+
+    menu:
+        "Approve":
+            vc "You have decided to invest in better housing, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 15
+            $ GDP -= 50000000000
+        "Decline":
+            vc "You have declined to invest in better housing."'
+            $ popularity -= 2
+
+    vc "Would you like to make the buisness state-owned?"
+
+    menu:
+        "Approve":
+            vc "You have decided to make the buisness state-owned, this will increase the GDP of the country but will also decrease the popularity of the government."
+            $ GDP += 75000000000
+            $ popularity -= 10
+            $ welfare += 3
+            jump com
+        "Decline":
+            vc "You have declined to make the buisness state-owned."
+            $ popularity += 2
+    vc "Would you like to increase taxes on the rich?"
+
+label com:
+    vc "communism"
+
+label fas:
+    vc "uh"
     # This ends the game 
 
     return
