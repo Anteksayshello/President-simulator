@@ -3,8 +3,13 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
-define p = character("President")
+
+define p = Character("President")
+define vc = Character("Vice President")
+define n = Character("Narrator")
+
+default education = 65
+default national_budget = 1000000000000
 
 # The game starts here.
 
@@ -14,23 +19,40 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
 
-    scene bg room
+    
 
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
     # directory.
 
-    show eileen happy
+    # The ai generation is amazing
 
     # These display lines of dialogue.
+    
+    n "You have been elected by the people to be the president of listenbourg"
+    n "In the next few years, you will have to make decisions that will affect the country and its people"
+    n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
+    
+    vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
+    p "Hello Vice President, I am ready to listen to your proposal"
+    vc "Would you like to invest in education?"
 
-    e "You've created aaffa Ren'Py game."
-    e "Welcome to President Simulator."
-    e "Your decisions will shape the nation."
-    e "OFUck youry, pictures, and music, you can release it to the world!"
-
-    e "you are retarded"
-    e "STOP LOOKING AT MY SCREEN"
-    # This ends the game.
+    menu:
+        "Approve":
+            $ education += 5
+            $ national_budget -= 10000000
+            vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
+        "Decline":
+            vc "You have decided not to invest into education, this resulted in you not decreasing the national budget but also not increasing the education level of the country."
+    
+    vc "Would you like to invest in infrastructure?"
+    
+    menu:
+        "Approve":
+            vc "You have invested in infrastructure."
+        "Decline":
+            vc "You have declined to invest in infrastructure."
+    
+    # This ends the game 
 
     return
