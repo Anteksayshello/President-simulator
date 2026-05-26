@@ -11,6 +11,26 @@ define n = Character("Narrator")
 default education = 65
 default national_budget = 1000000000000
 
+screen stats():
+
+    tag menu
+
+    frame:
+        xalign 1.0
+        yalign 0.05
+        padding (20, 20)
+
+        vbox:
+            spacing 10
+
+            text "Stats" size 30
+
+            text "Education: [education]" size 20
+            text "National Budget: [national_budget]" size 20
+
+            textbutton "Close" action Return() xalign 1.0
+
+
 # The game starts here.
 
 label start:
@@ -30,6 +50,7 @@ label start:
     # These display lines of dialogue.
     
     n "You have been elected by the people to be the president of listenbourg"
+    call screen stats
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
     
