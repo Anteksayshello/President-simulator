@@ -40,8 +40,15 @@ screen stats():
 
             text "Education: [education]" size 20
             text "National Budget: [national_budget]" size 20
-
-            textbutton "Close" action Return() xalign 1.0
+            text "GDP: [GDP]" size 20
+            text "Welfare: [welfare]" size 20
+            text "Inhabitants: [inhabitants]" size 20
+            text "Corruption: [corruption]" size 20
+            text "Popularity: [popularity]" size 20
+            text "Ideology: [ideology]" size 20
+            text "Power: [power]" size 20
+            text "Taxes: [taxes]" size 20
+            textbutton "Close stats" action Return() xalign 1.0
 
 
 # The game starts here.
@@ -105,7 +112,7 @@ label ass:
     vc "Would you like to Assinate people that fight for equal rights?"
     menu:
         "Approve":
-            vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government.
+            vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government."
             $ popularity -= 10
         jump fas
         "Decline":
@@ -139,7 +146,76 @@ label com:
     vc "communism"
 
 label fas:
-    vc "uh"
-    # This ends the game 
+    call screen stats
+    vc "Do you accept to have one man in power?"
+
+    menu:
+        "Approve":
+            vc "You have decided to have one man in power, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 20
+            $ popularity -= 10
+            jump fasc 2
+        "Decline":
+            vc "You have declined to have one man in power."
+            jump fasc 1
+
+     label fasc 1:
+    n " you have been assassinated by a diffrent power in the government, you have lost the game"
+        jump end
+
+    label fasc 2:
+        vc "Would you like to invest in a secret police?"
+
+    menu:
+        "Approve":
+            vc "You have decided to invest in a secret police, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ national_budget -= 200000000
+        "Decline":
+            vc "You have declined to invest in a secret police."
+    
+        VC "Do you want to exterminate the opposition?"
+
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 10)
+            if roll = 1:
+                n "The opposition has been able to fight back and you have been assassinated, you have lost the game"
+                jump end
+            elif roll = 2:
+                vc "People have found out about the extermination"
+                $ popularity -= 30
+                $ power += 15
+                jump fasc 3
+            else: 
+                vc "You have assassinated the opposition in their sleep by slicing their throats."
+                $ power += 20
+                jump fasc 3
+
+        
+        "Decline":
+            vc "You have declined to exterminate the opposition."
+            n "Your political opponents didn't like you and they have been able to assassinate you, you have lost the game"
+            jump end
+    label fasc 3:
+        vc "Do you want to introduce propaganda in the media?"
+
+    menu: 
+        "Approve":
+            vc "You have decided to introduce propaganda in the media, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity += 15
+            jump fasc 4
+        "Decline":
+            vc "You have declined to introduce propaganda in the media."
+            N "The media has been able to criticize you and you have been assassinated, you have lost the game"
+            jump end
+
+    label fasc 4:
+        vc "You have brainwashed the population with propaganda, what do you want them to do?""
+
+    menu:
+        "let them work more":
+    
 
     return
