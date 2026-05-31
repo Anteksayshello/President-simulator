@@ -9,21 +9,22 @@ define vc = Character("Vice President")
 define n = Character("Narrator")
 
 default education = 60
-default national_budget = 1000000000000
+default national_budget = 1000
 default welfare = 60
 default inhabitants = 40000000
 default corruption = 5
-default Education = 60
-default Popularity = 60
-default ideology = 60
+default education = 60
+default popularity = 60
+default ideology = "Democracy"
 default power = 60
-default taxes = 20000000000
+default taxes = 20
 
 default leader = 0
 default militia = 0
 default military = 0
 
 default days = 0
+default playthroughs = 0
 
 
 
@@ -43,15 +44,15 @@ screen stats():
             text "Stats" size 30
 
             text "Education: [education]" size 20
-            text "National Budget: [national_budget]" size 20
-            text "GDP: [GDP]" size 20
+            text "[national_budget >= 1000 and 'National Budget: ' + '{:.1f}'.format(national_budget/1000) + ' trillion' or 'National Budget: ' + '{:.1f}'.format(national_budget) + ' billion']" size 20
             text "Welfare: [welfare]" size 20
             text "Inhabitants: [inhabitants]" size 20
             text "Corruption: [corruption]" size 20
             text "Popularity: [popularity]" size 20
             text "Ideology: [ideology]" size 20
             text "Power: [power]" size 20
-            text "Taxes: [taxes]" size 20
+            text "Taxes: [taxes] billion" size 20
+            text "Playthroughs: [playthroughs]" size 20
             textbutton "Close stats" action Return() xalign 1.0
 
 
@@ -93,7 +94,7 @@ label begin:
     menu:
         "Approve":
             $ education += 5
-            $ national_budget -= 10000000000
+            $ national_budget -= 10
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
             vc "You have declined to invest in education."
@@ -103,7 +104,7 @@ label begin:
     menu:
         "Approve":
             vc "You have invested in infrastructure."
-            $ national_budget -= 25000000000
+            $ national_budget -= 25
             $ welfare += 5
         "Decline":
             vc "You have declined to invest in infrastructure."
@@ -114,7 +115,7 @@ label begin:
         "Approve":
             vc "You have decided to promote equal rights, this will increase the welfare of the country but will also decrease the national budget."
             $ popularity += 10
-            $ national_budget -= 15000000000
+            $ national_budget -= 15
             jump cap
         "Decline":
             vc "You have declined to promote equal rights."
@@ -127,7 +128,7 @@ label ass:
         "Approve":
             vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government."
             $ popularity -= 10
-        jump fas
+            jump fas
         "Decline":
             vc "You have declined to assinate people that fight for equal rights."
             jump cap
@@ -137,9 +138,9 @@ label cap:
         "Approve":
             vc "You have decided to invest in better housing, this will increase the welfare of the country but will also decrease the national budget."
             $ welfare += 15
-            $ national_budget -= 50000000000
+            $ national_budget -= 50
         "Decline":
-            vc "You have declined to invest in better housing."'
+            vc "You have declined to invest in better housing."
             $ popularity -= 2
 
     vc "Would you like to make the buisness state-owned?"
@@ -147,7 +148,7 @@ label cap:
     menu:
         "Approve":
             vc "You have decided to make the buisness state-owned, this will increase the national budget of the country but will also decrease the popularity of the government."
-            $ national_budget += 75000000000
+            $ national_budget += 75
             $ popularity -= 10
             $ welfare += 3
             jump com
@@ -159,15 +160,15 @@ label cap:
     menu:
         "Approve":
             vc "You have decided to increase taxes on the rich, this will increase the national budget but will also decrease the popularity of the government."
-            $ taxes += 5000000000
-            $ national_budget += 25000000000
+            $ taxes += 5
+            $ national_budget += 25
             $ popularity -= 5
             vc "Use the money to improve homeless shelters and public transportation."
             menu:
                 "Approve":
                     vc "You have decided to use the money to improve homeless shelters and public transportation, this will increase the welfare of the country but will also decrease the national budget."
                     $ welfare += 5
-                    $ national_budget -= 10000000000
+                    $ national_budget -= 10
                 "Decline":
                     vc "You have declined to use the money to improve homeless shelters and public transportation."
                     $ popularity -= 2
@@ -178,8 +179,8 @@ label cap:
     menu:
         "Approve":
             vc "You have decided to reduce taxes on the poor, this will increase the popularity of the government but will also decrease the national budget."
-            $ taxes -= 5000000000
-            $ national_budget -= 25000000000
+            $ taxes -= 5
+            $ national_budget -= 25
             $ popularity += 5
         "Decline":
             vc "You have declined to reduce taxes on the poor."
@@ -194,69 +195,100 @@ label cap:
                         "Unite under a monarchy":
                             vc "You have decided to unite under a monarchy, this will increase the popularity of the government "
                             $ popularity += 10
-                            $ national_budget -= 50000000000
+                            $ national_budget -= 50
                             jump mon
                            
                         "Unite under one nationality":
                             vc "You have decided to stand under the banner of fascism, this will increase the popularity of the government but will also decrease the national budget."
                             $ popularity += 10
-                            $ national_budget -= 50000000000
+                            $ national_budget -= 50
                             jump fas
 
                 "Decline":
                     vc "You listened to the angry citizens and apologized for not reducing taxes on the poor, this has increase the popularity of the government."
                     $ popularity += 2
+                    vc "invest in better healthcare"
+                    menu:
+                        "Approve":
+                            vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
+                            $ welfare += 3
+                            $ national_budget -= 100
+                        "Decline":
+                            vc "You have declined to invest in better healthcare."
+                            $ popularity -= 2
+                    vc "inveest in better social security"
+                    menu:
+                        "Approve":
+                            vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
+                            $ welfare += 3
+                            $ national_budget -= 75
+                        "Decline":
+                            vc "You have declined to invest in better social security."
+                            $ popularity -= 2
+                    vc "invest in better nutrition for the poor"
+                    menu:
+                        "Approve":
+                            vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
+                            $ welfare += 3
+                            $ national_budget -= 50
+                        "Decline":
+                            vc "You have declined to invest in better nutrition for the poor."
+                            $ popularity -= 2
+                    vc "you got outvoted and you have to resign, you have lost the game."
+                    jump end
 
-    label com:
-        vc "Would you like to promote equality?"
+label com:
+    $ ideology = "Communist"
+    vc "you are now a communist country"
+    vc "Would you like to promote equality?"
 
-        menu:
-            "Approve":
-                vc "You have decided to promote equality, this will increase the welfare of the country but will also decrease the national budget."
-                $ education += 15
-                $ national_budget -= 20000000000
-                jump soc
-            "Decline":
-                vc "You have declined to promote equality."
-        
-        "Would you like to withold leader elecations?"
-        menu:
-            "Approve":
-                vc "You have decided to withold leader elecations, this will increase the power of the government but will also decrease the popularity of the government."
-                $ power += 20
-                $ popularity -= 20
-                jump com2
-            "Decline":
-                vc "You have declined to withold leader elecations."
-        
-        "Would you like to give power to the people?"
-        menu:
-            "Approve":
-                vc "You have decided to give power to the people, this will increase the popularity of the government but will also decrease the power of the government."
-                $ popularity += 20
-                $ power = 0
-                jump arch
-            "Decline":
-                vc "You have declined to give power to the people."
-                jump com2
+    menu:
+        "Approve":
+            vc "You have decided to promote equality, this will increase the welfare of the country but will also decrease the national budget."
+            $ education += 15
+            $ national_budget -= 20
+            jump soc
+        "Decline":
+            vc "You have declined to promote equality."
 
-    label com2:
-        vc "Would you like to give power to the workers?"
-        menu:
-            "Approve":
-                vc "You have decided to give power to the workers, this will increase the popularity of the government but will also decrease the power of the government."
-                $ popularity += 20
-            "Approve":
-                vc "You have decided to give power to the workers, this will increase the popularity of the government but will also decrease the power of the government."
-                $ popularity += 20
-        
+    vc "Would you like to withold leader elecations?"
+    
+    menu:
+        "Approve":
+            vc "You have decided to withold leader elecations, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 20
+            $ popularity -= 20
+            jump com2
+        "Decline":
+            vc "You have declined to withold leader elecations."
+
+    vc "Would you like to give power to the people?"
+    menu:
+        "Approve":
+            vc "You have decided to give power to the people, this will increase the popularity of the government but will also decrease the power of the government."
+            $ popularity += 20
+            $ power = 0
+            jump arch
+        "Decline":
+            vc "You have declined to give power to the people."
+            jump com2
+
+label com2:
+    vc "Would you like to give power to the workers?"
+    menu:
+        "Approve":
+            vc "You have decided to give power to the workers, this will increase the popularity of the government but will also decrease the power of the government."
+            $ popularity += 20
+        "Decline":
+            vc "You have declined to give power to the workers."
+
     vc "Would you like to make the media state-owned?"
     menu:
         "Approve":
             vc "You have decided to make the media state-owned, this will increase the popularity of the government but will also decrease the power of the government."
             $ popularity += 10
             $ power -= 10
-            $ national_budget -= 3000000000
+            $ national_budget -= 3
 
         "Decline":
             vc "You have declined to make the media state-owned."
@@ -268,7 +300,7 @@ label cap:
             $ power += 20
             $ popularity -= 20
             $ leader = 1
-            $ national_budget -= 500000000
+            $ national_budget -= 0.5
         "Decline":
             vc "You have declined to promote a one leader mentality."
     
@@ -278,7 +310,7 @@ label cap:
             vc "You have decided to introduce a secret police, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 20
             $ popularity -= 20
-            $ national_budget -= 1500000000
+            $ national_budget -= 1.5
             
             vc "would you like remove political opponents?"
             menu:
@@ -290,18 +322,18 @@ label cap:
         "Decline":
             vc "You have declined to introduce a secret police."
 
-    if leader = 1:
-        vc "You have promoted a one leader mentality,now the country has been united under your face."
+    if leader == 1:
+        vc "You have promoted a one leader mentality, now the country has been united under your face."
         $ power += 10
         $ popularity += 10
    
-   vc "Would you like to unite a national council"
+    vc "Would you like to unite a national council"
     menu:
         "Approve": 
             vc "You have decided to unite a national council."
             $ power -= 5
             $ popularity += 5
-            $ national_budget -= 5000000000
+            $ national_budget -= 5
             jump com4 
         "Decline":
             vc "You have declined to unite a national council."
@@ -323,148 +355,211 @@ label com4:
         "Approve":
             vc "You have decided to unite the country under one banner, this will increase the popularity of the government."
             $ popularity += 3
-            $ national_budget -= 10000000000
+            $ national_budget -= 10
         "Decline":
-        jump co1
+            jump co1
 
-show VCCOM
-vc "Would you like to reinstate the militia?"
+    show VCCOM
+    vc "Would you like to reinstate the militia?"
     menu:
         "Approve":
             vc "You have decided to reinstate the militia, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 10
             $ popularity -= 10
-            $ national_budget -= 5000000000
+            $ national_budget -= 5
+            $ militia = 1
         "Decline":
             vc "You have declined to reinstate the militia."
 
-vc "Would you like to militarise the goverment?"
+    vc "Would you like to militarise the goverment?"
     menu:
         "Approve":
             vc "You have decided to militarise the goverment, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 12
             $ popularity -= 15
-            $ national_budget -= 10000000000
+            $ national_budget -= 10
         "Decline":
             vc "You have declined to militarise the goverment."
             jump co1
 
     vc "Would you like to SPREAD THE REVOLUTION?"
-        menu:
-            "Approve":
-                vc "You have decided to spread the revolution, this will increase the popularity of the government but will also decrease the power of the government."
-                $ popularity += 5
-                $ power += 5
-                jump com5
-            "Decline":
-                vc "You have declined to spread the revolution."
-                jump co1
+    menu:
+        "Approve":
+            vc "You have decided to spread the revolution, this will increase the popularity of the government but will also decrease the power of the government."
+            $ popularity += 5
+            $ power += 5
+            jump com5
+        "Decline":
+            vc "You have declined to spread the revolution."
+            jump co1
 label co1:
     vc "You are about to coup the goverment would you like to proceerd?"
-        menu:
-            "Approve":
-                vc "You have decided to coup the goverment.
-                jump co2
-            "Decline":
-                vc "You have declined to coup the goverment."
-                jump com5
+    menu:
+        "Approve":
+            vc "You have decided to coup the goverment."
+            jump co2
+        "Decline":
+            vc "You have declined to coup the goverment. you will be ccommunist for the rest of your presidency."
+            jump com5
 
 label com5:
     vc "SIR, YOU FREED THE WORKERS OF PORTUGAL"
-        $ inhabitants += 10104552
-        $ welfare += 10
-        $ national_budget += 500000000000
-        $ corruption += 10
+    $ inhabitants += 10104552
+    $ welfare += 10
+    $ national_budget += 500
+    $ corruption += 10
     
     vc "Would you to promote an iberian unification?"
-        menu:
-            "Approve":
-                vc "You have decided to promote an iberian unification, this will increase the popularity."
-                $ popularity += 3
-                $ education += 2
-                $ national_budget -= 30000000000
-            "Decline":
-                vc "You have declined to promote an iberian unification."
+    menu:
+        "Approve":
+            vc "You have decided to promote an iberian unification, this will increase the popularity."
+            $ popularity += 3
+            $ education += 2
+            $ national_budget -= 30
+        "Decline":
+            vc "You have declined to promote an iberian unification."
     vc "Would you like to expand military."
-        menu:
-            "Approve":
-                vc "You have decided to expand the military, this will increase the power of the government but will also decrease the popularity of the government."
-                $ power += 10
-                $ popularity -= 10
-                $ national_budget -= 50000000000
-                $ military = 1
-            "Decline":
-                vc "You have declined to expand the military."
+    menu:
+        "Approve":
+            vc "You have decided to expand the military, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 10
+            $ national_budget -= 50
+            $ military = 1
+        "Decline":
+            vc "You have declined to expand the military."
     vc "Would you like to invest in the workers of iberia?"
-        menu:
-            "Approve":
-                vc "You have decided to invest in the workers of iberia, this will increase the welfare of the country but will also decrease the national budget."
-                $ welfare += 10
-                $ national_budget -= 20000000000
-            "Decline":
-                vc "You have declined to invest in the workers of iberia."
+    menu:
+        "Approve":
+            vc "You have decided to invest in the workers of iberia, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 10
+            $ national_budget -= 20
+        "Decline":
+            vc "You have declined to invest in the workers of iberia."
 
     vc "Would you like to INVADE SPAIN?"
-        menu:
-            "Approve":
-                $ popularity += 3
-            "Fight":
-                popularity += 4
+    menu:
+        "Approve":
+            $ popularity += 3
+        "Fight":
+            $ popularity += 4
 
     vc "You started a war with spain"
-    if military = 0:
+    if military == 0:
         vc "While fighting the spanish army, you send everyone to the frontlines and had nobody left to protect you, so spain was able to assassinate you, you died."
         jump end
 
-    if military = 1:
+    if military == 1:
         vc "While fighting the spanish army, you had a strong military and you were able to defend yourself, but the war was long and costly, you lost a lot of popularity and power but you were able to annex spain."
         $ popularity -= 5
         $ power -= 5
-        $ national_budget -= 100000000000
+        $ national_budget -= 100
         $ welfare -= 7
         $ inhabitants += 37147532
     
     vc "Would you like to demand Gilbraltar from the UK?"
-       menu:
-            "Approve":
-                vc "You have decided to demand Gilbraltar from the UK."
-                $ roll = renpy.random.randint(1, 10)
-                if roll = 1:
-                    vc "The Uk has decided to protect Gilbraltar from you, would you like to declare war on the UK?"
-                     menu:
-                        "Approve":
-                            vc "You have deicided to declare war on the Uk and it ended up in you losing the war, because of their naval dominance and you have been seized by the SAS."
-                            jump end
-                        "Decline":
-                            vc "You have declined to declare war on the UK."
-                else:
-                    vc "The UK has decided to concede Gilbraltar to you.
-                    $ popularity += 5
-                    $ national_budget += 5000000000
-                    $ inhaibitants += 300000
-                    $ welfare += 2
-            "Decline":
-                vc "You have declined to demand Gilbraltar from the UK."
+    menu:
+        "Approve":
+            vc "You have decided to demand Gilbraltar from the UK."
+            $ roll = renpy.random.randint(1, 10)
+            if roll == 1:
+                vc "The Uk has decided to protect Gilbraltar from you, would you like to declare war on the UK?"
+                menu:
+                    "Approve":
+                        vc "You have deicided to declare war on the Uk and it ended up in you losing the war, because of their naval dominance and you have been seized by the SAS."
+                        jump end
+                    "Decline":
+                        vc "You have declined to declare war on the UK."
+            else:
+                vc "The UK has decided to concede Gilbraltar to you."
+                $ popularity += 5
+                $ national_budget += 5
+                $ inhabitants += 300000
+                $ welfare += 2
+        "Decline":
+            vc "You have declined to demand Gilbraltar from the UK."
     vc "Would you like to stomp on Andorra?"
-        menu:
-            "Approve": 
-                vc "You have decided to stomp on Andorra, this will increase the popularity of the government.
-                $ popularity += 3
-                $ national_budget -= 1000000000
-                $ inhabitants += 65115
-                $ welfare += 1
-            "Decline":
-                vc "You have declined to stomp on Andorra."
+    menu:
+        "Approve": 
+            vc "You have decided to stomp on Andorra, this will increase the popularity of the government."
+            $ popularity += 3
+            $ national_budget -= 1
+            $ inhabitants += 65115
+            $ welfare += 1
+        "Decline":
+            vc "You have declined to stomp on Andorra."
 
     vc "You have successfully unified the iberian peninsula, the people are happy and you are now the most powerful leader in the Europe good job."
     jump end 
     
     
     
- label co2: 
+label co2: 
+    $ ideology = "Democracy"
     vc "Your country has become a democracy once more"
+    vc "woould you want to reform the military"
+    menu:
+        "Approve":
+            vc "You have decided to reform the military, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 5
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to reform the military."
+            $ military = 1
+    vc "Would you like to introduce a capitalist economy?"
+    menu:
+        "Approve":
+            vc "you have decided to introduce a capitalist economy, this will increase the national budget, welfare and popularity"
+            $ national_budget += 100
+            $ welfare += 10
+            $ popularity += 10
+        "Decline":
+            vc "You have declined to introduce a capitalist economy."
+    vc "Would you like to introduce a free press?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce a free press, this will increase the popularity of the government but will also decrease the power of the government."
+            $ popularity += 10
+            $ power -= 8
+            $ national_budget -= 5
+        "Decline":
+            vc "You have declined to introduce a free press."
+            $ popularity -= 2
+    vc "do you want to re-introduce elections and the parliament?"
+    menu:
+        "Approve":
+            vc "You have decided to re-introduce elections and the parliament, this will increase the popularity of the government but will also decrease the power of the government."
+            $ popularity += 10
+            $ power -= 20
+            vc "your country is once again a full democracy, but sadly the first thing they wanted to do is hold new elections and they have voted you out of office, you have lost the game."
+            jump end
+        "Decline":
+            vc "You have declined to re-introduce elections and the parliament."
+            $ popularity -= 5
+            $ power += 10
+            if military == 1:
+                vc "The military has decided to support you and they have helped you to coup the goverment, you are now a military regime."
+                jump milr
+            else:
+                vc "there is no military  so you got overthrown, you have lost the game."
+                jump end
+label milr:
+    if militia == 1:
+        vc "The militia has saved you from being assinated"
+    else:
+        n "you got assinated because you didn't have a militia to protect you, you have lost the game."
+        jump end
+    vc "you executed the conspiritators making the people hate and fear you, but you are still in power."
+    $ power += 20
+    $ popularity -= 20
+    vc "after countless of assasination attempts they finally succeeded and you got assinated, you have lost the game."
+    jump end
+
+
 
 label arch:
+    $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
 
     na "Get rid of the political parties."
@@ -478,7 +573,7 @@ label arch:
     menu:
         "Approve":
             na "You strip the royal family of their power."
-         "Approve":
+        "Approve":
             na "You strip the royal family of their power."
     na "Discontinue the state military."
     menu:
@@ -501,24 +596,25 @@ label arch:
         "Approve":
             na "You disband any and all goverment bodies."
 
-    Na "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
+    n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
 
-    na "A couple days later, while you are walking home, you get hit by a car and die."
+    n "A couple days later, while you are walking home, you get hit by a car and die."
 
     na "The end."
     jump end
 
 label soc:
     vc "More people started working."
-    $ national_budget += 50000000000
+    $ national_budget += 50
 
 label mon:
+    $ ideology = "Monarchy"
     vc "would you like to build a palace for yourself?"
     menu:
         "Approve":
             vc "the people like your palace but a few people lost their lives due to poor working conditions."
             $ power += 5
-            $ national_budget -= 50000000000
+            $ national_budget -= 50
             $ popularity += 5
             $ inhabitants -= 100
         "Decline":
@@ -538,8 +634,8 @@ label mon:
         "Approve":
             vc "You have decided to bring back the guillotine."
             $ power += 20
-            $ national_budget -= 500000
-        decline:
+            $ national_budget -= 0.0005
+        "decline":
             vc "You have declined to bring back the guillotine."
 
     vc "Do you want to force religion on the population?"
@@ -553,9 +649,9 @@ label mon:
             vc "You have declined to force religion on the population." 
             jump mon2
 
-    label mon1:
-        vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
-        $ inhabitants -= 1000
+label mon1:
+    vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
+    $ inhabitants -= 1000
 
     vc "The people have accepted the religion and you become emperor."
 
@@ -568,10 +664,11 @@ label mon:
             vc "You have declined to make the people worship you as a god."
             jump end
 
-    label mon2:
+label mon2:
         vc "The people liked your decision to not force religion on them and they have accepted you as their king."
         vc "You have become a beloved king and you died surrounded by your family and friends."
 label fas:
+    $ ideology = "Fascist"
     call screen stats
     vc "Do you accept to have one man in power?"
 
@@ -580,23 +677,23 @@ label fas:
             vc "You have decided to have one man in power, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 20
             $ popularity -= 10
-            jump fasc 2
+            jump fasc2
         "Decline":
             vc "You have declined to have one man in power."
-            jump fasc 1
+            jump fasc1
 
-     label fasc 1:
+label fasc1:
     n " you have been assassinated by a diffrent power in the government, you have lost the game"
-        jump end
+    jump end
 
-    label fasc 2:
-        vc "Would you like to invest in a secret police?"
+label fasc2:
+    vc "Would you like to invest in a secret police?"
 
     menu:
         "Approve":
             vc "You have decided to invest in a secret police, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 10
-            $ national_budget -= 200000000
+            $ national_budget -= 0.2
         "Decline":
             vc "You have declined to invest in a secret police."
     
@@ -605,50 +702,50 @@ label fas:
     menu:
         "Approve":
             $ roll = renpy.random.randint(1, 10)
-            if roll = 1:
+            if roll == 1:
                 n "The opposition has been able to fight back and you have been assassinated, you have lost the game"
                 jump end
-            elif roll = 2:
+            elif roll == 2:
                 vc "People have found out about the extermination"
                 $ popularity -= 30
                 $ power += 15
-                jump fasc 3
+                jump fasc3
             else: 
                 vc "You have assassinated the opposition in their sleep by slicing their throats."
                 $ power += 20
-                jump fasc 3
+                jump fasc3
 
         
         "Decline":
             vc "You have declined to exterminate the opposition."
             n "Your political opponents didn't like you and they have been able to assassinate you, you have lost the game"
             jump end
-    label fasc 3:
-        vc "Do you want to introduce propaganda in the media?"
+label fasc3:
+    vc "Do you want to introduce propaganda in the media?"
 
     menu: 
         "Approve":
             vc "You have decided to introduce propaganda in the media, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 10
             $ popularity += 15
-            jump fasc 4
+            jump fasc4
         "Decline":
             vc "You have declined to introduce propaganda in the media."
-            N "The media has been able to criticize you and you have been assassinated, you have lost the game"
+            n "The media has been able to criticize you and you have been assassinated, you have lost the game"
             jump end
 
-    label fasc 4:
-        vc "You have brainwashed the population with propaganda, what do you want them to do?""
+label fasc4:
+    vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
     menu:
         "let them work more":
-        jump fasc work
-        "build infrastructure"
-        jump fasc infa
-        "increase population"
-        jump fasc pop
-        "do nothing"
-        jump fasc end
+            jump fascwork
+        "build infrastructure":
+            jump fascinfa
+        "increase population":
+            jump fascpop
+        "do nothing":
+            jump fascend
     
 
 label israel:
@@ -656,7 +753,7 @@ label israel:
     menu:
         "Approve":
             vc "You have decided to give money to Israel."
-            $ national_budget -= 50000000000
+            $ national_budget -= 50
             $ corruption += 20
             jump begin
         "Decline":
@@ -666,6 +763,20 @@ label end:
     na "Would you like to play again?"
     menu:
         "Yes":
+            $ playthroughs += 1
+            $ education = 60
+            $ national_budget = 1000
+            $ welfare = 60
+            $ inhabitants = 40000000
+            $ corruption = 5
+            $ ideology = "Democracy"
+            $ power = 60
+            $ taxes = 20
+            $ leader = 0
+            $ militia = 0
+            $ military = 0
+            $ days = 0
+            $ popularity = 60
             jump start
         "No":
             return
