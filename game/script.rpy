@@ -80,6 +80,14 @@ label start:
     
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
     p "Hello Vice President, I am ready to listen to your proposal"
+
+    $ roll = renpy.random.randint(1, 100)
+    if roll <= 1:
+        jump israel
+    else: 
+        jump begin
+
+label begin:
     vc "Would you like to invest in education?"
 
     menu:
@@ -505,8 +513,64 @@ label soc:
     $ national_budget += 50000000000
 
 label mon:
-    vc "monarchy"
+    vc "would you like to build a palace for yourself?"
+    menu:
+        "Approve":
+            vc "the people like your palace but a few people lost their lives due to poor working conditions."
+            $ power += 5
+            $ national_budget -= 50000000000
+            $ popularity += 5
+            $ inhabitants -= 100
+        "Decline":
+            vc "You have declined to build a palace for yourself."
 
+    vc "Would you like to legalize incest to keep the power in the family?"
+    menu:
+        "approve":
+            vc "You have decided to legalize incest to keep the power in the family."
+            $ welfare -= 20
+            $ inhabitants += 2000000
+        "Decline":
+            vc "nothing happens because nothing changes"
+    
+    vc "Would you like to bring back the guillotine?"
+    menu:
+        "Approve":
+            vc "You have decided to bring back the guillotine."
+            $ power += 20
+            $ national_budget -= 500000
+        decline:
+            vc "You have declined to bring back the guillotine."
+
+    vc "Do you want to force religion on the population?"
+    menu:
+        "Approve":
+            vc "You have decided to force religion on the population."
+            $ power += 10
+            $ popularity -= 10
+            jump mon1
+        "Decline":
+            vc "You have declined to force religion on the population." 
+            jump mon2
+
+    label mon1:
+        vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
+        $ inhabitants -= 1000
+
+    vc "The people have accepted the religion and you become emperor."
+
+    vc "Do you want to make the people worship you as a god?"
+    menu:
+        "Approve":
+            vc "You have become untouchable and you have become a god in the eyes of the people."
+            jump end
+        "Decline":
+            vc "You have declined to make the people worship you as a god."
+            jump end
+
+    label mon2:
+        vc "The people liked your decision to not force religion on them and they have accepted you as their king."
+        vc "You have become a beloved king and you died surrounded by your family and friends."
 label fas:
     call screen stats
     vc "Do you accept to have one man in power?"
@@ -578,8 +642,26 @@ label fas:
 
     menu:
         "let them work more":
+        jump fasc work
+        "build infrastructure"
+        jump fasc infa
+        "increase population"
+        jump fasc pop
+        "do nothing"
+        jump fasc end
     
 
+label israel:
+    vc "Do you want to give money to Israel?"
+    menu:
+        "Approve":
+            vc "You have decided to give money to Israel."
+            $ national_budget -= 50000000000
+            $ corruption += 20
+            jump begin
+        "Decline":
+            vc "You have been assaninated by the Mossad, you have lost the game."
+            jump end
 label end:
     na "Would you like to play again?"
     menu:
