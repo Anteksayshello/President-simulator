@@ -42,8 +42,15 @@ screen stats():
 
             text "Education: [education]" size 20
             text "National Budget: [national_budget]" size 20
-
-            textbutton "Close" action Return() xalign 1.0
+            text "GDP: [GDP]" size 20
+            text "Welfare: [welfare]" size 20
+            text "Inhabitants: [inhabitants]" size 20
+            text "Corruption: [corruption]" size 20
+            text "Popularity: [popularity]" size 20
+            text "Ideology: [ideology]" size 20
+            text "Power: [power]" size 20
+            text "Taxes: [taxes]" size 20
+            textbutton "Close stats" action Return() xalign 1.0
 
 
 # The game starts here.
@@ -98,10 +105,11 @@ label start:
             vc "You have decided to promote equal rights, this will increase the welfare of the country but will also decrease the national budget."
             $ popularity += 10
             $ national_budget -= 15000000000
+            jump cap
         "Decline":
             vc "You have declined to promote equal rights."
-            
-    vc "Would you like to invest in better housing?"
+            jump ass
+    
 
 label ass:
     vc "Would you like to Assinate people that fight for equal rights?"
@@ -112,13 +120,14 @@ label ass:
         jump fas
         "Decline":
             vc "You have declined to assinate people that fight for equal rights."
-    
-
+            jump cap
+label cap:  
+    vc "Would you like to invest in better housing?"
     menu:
         "Approve":
             vc "You have decided to invest in better housing, this will increase the welfare of the country but will also decrease the national budget."
             $ welfare += 15
-            $ Na -= 50000000000
+            $ national_budget -= 50000000000
         "Decline":
             vc "You have declined to invest in better housing."'
             $ popularity -= 2
@@ -127,8 +136,8 @@ label ass:
 
     menu:
         "Approve":
-            vc "You have decided to make the buisness state-owned, this will increase the GDP of the country but will also decrease the popularity of the government."
-            $ GDP += 75000000000
+            vc "You have decided to make the buisness state-owned, this will increase the national budget of the country but will also decrease the popularity of the government."
+            $ national_budget += 75000000000
             $ popularity -= 10
             $ welfare += 3
             jump com
@@ -137,6 +146,56 @@ label ass:
             $ popularity += 2
    
     vc "Would you like to increase taxes on the rich?"
+    menu:
+        "Approve":
+            vc "You have decided to increase taxes on the rich, this will increase the national budget but will also decrease the popularity of the government."
+            $ taxes += 5000000000
+            $ national_budget += 25000000000
+            $ popularity -= 5
+            vc "Use the money to improve homeless shelters and public transportation."
+            menu:
+                "Approve":
+                    vc "You have decided to use the money to improve homeless shelters and public transportation, this will increase the welfare of the country but will also decrease the national budget."
+                    $ welfare += 5
+                    $ national_budget -= 10000000000
+                "Decline":
+                    vc "You have declined to use the money to improve homeless shelters and public transportation."
+                    $ popularity -= 2
+        "Decline":
+            vc "You have declined to increase taxes on the rich."
+            $ popularity += 2
+    vc "reduce the taxes on the poor?"
+    menu:
+        "Approve":
+            vc "You have decided to reduce taxes on the poor, this will increase the popularity of the government but will also decrease the national budget."
+            $ taxes -= 5000000000
+            $ national_budget -= 25000000000
+            $ popularity += 5
+        "Decline":
+            vc "You have declined to reduce taxes on the poor."
+            $ popularity -= 2
+            vc "ingnore the angry citizens and continue with your presidency"
+            menu:
+                "Approve":
+                    vc "You have decided to ingnore the angry citizens and continue with your presidency, this will decrease the popularity of the government."
+                    $ popularity -= 5
+                    vc "the citizens start a revolution choose the banner you will stand under"
+                    menu:
+                        "Unite under a monarchy":
+                            vc "You have decided to unite under a monarchy, this will increase the popularity of the government "
+                            $ popularity += 10
+                            $ national_budget -= 50000000000
+                            jump mon
+                           
+                        "Unite under one nationality":
+                            vc "You have decided to stand under the banner of fascism, this will increase the popularity of the government but will also decrease the national budget."
+                            $ popularity += 10
+                            $ national_budget -= 50000000000
+                            jump fas
+
+                "Decline":
+                    vc "You listened to the angry citizens and apologized for not reducing taxes on the poor, this has increase the popularity of the government."
+                    $ popularity += 2
 
 label com:
     vc "Would you like to promote equality?"
@@ -271,7 +330,82 @@ label soc:
     vc "More people started working."
     $ national_budget += 50000000000
 
+label mon:
+    vc "monarchy"
+
 label fas:
+    call screen stats
+    vc "Do you accept to have one man in power?"
+
+    menu:
+        "Approve":
+            vc "You have decided to have one man in power, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 20
+            $ popularity -= 10
+            jump fasc 2
+        "Decline":
+            vc "You have declined to have one man in power."
+            jump fasc 1
+
+     label fasc 1:
+    n " you have been assassinated by a diffrent power in the government, you have lost the game"
+        jump end
+
+    label fasc 2:
+        vc "Would you like to invest in a secret police?"
+
+    menu:
+        "Approve":
+            vc "You have decided to invest in a secret police, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ national_budget -= 200000000
+        "Decline":
+            vc "You have declined to invest in a secret police."
+    
+        vc "Do you want to exterminate the opposition?"
+
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 10)
+            if roll = 1:
+                n "The opposition has been able to fight back and you have been assassinated, you have lost the game"
+                jump end
+            elif roll = 2:
+                vc "People have found out about the extermination"
+                $ popularity -= 30
+                $ power += 15
+                jump fasc 3
+            else: 
+                vc "You have assassinated the opposition in their sleep by slicing their throats."
+                $ power += 20
+                jump fasc 3
+
+        
+        "Decline":
+            vc "You have declined to exterminate the opposition."
+            n "Your political opponents didn't like you and they have been able to assassinate you, you have lost the game"
+            jump end
+    label fasc 3:
+        vc "Do you want to introduce propaganda in the media?"
+
+    menu: 
+        "Approve":
+            vc "You have decided to introduce propaganda in the media, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity += 15
+            jump fasc 4
+        "Decline":
+            vc "You have declined to introduce propaganda in the media."
+            N "The media has been able to criticize you and you have been assassinated, you have lost the game"
+            jump end
+
+    label fasc 4:
+        vc "You have brainwashed the population with propaganda, what do you want them to do?""
+
+    menu:
+        "let them work more":
+    
+    vc "fascism"
     vc "uh"
 
 label end:
@@ -283,7 +417,8 @@ label end:
             return
         "Look at statscreen":
             call screen stats
-            na "Would you like to play again?"
+            jump end
+            
     # This ends the game 
 
 
