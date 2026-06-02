@@ -1,4 +1,4 @@
-﻿# The script of the game goes in this file.
+﻿ # The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -13,7 +13,6 @@ default national_budget = 1000
 default welfare = 60
 default inhabitants = 40000000
 default corruption = 5
-default education = 60
 default popularity = 60
 default ideology = "Democracy"
 default power = 60
@@ -26,8 +25,170 @@ default military = 0
 default days = 0
 default playthroughs = 0
 
+default ach_first_decision = False
+default ach_assassin = False
+default ach_state_owned_business = False
+default ach_rich_taxation = False
+default ach_secret_police = False
+default ach_united_iberia = False
+default ach_democratic_return = False
+default ach_anarchist_vision = False
+default ach_monarchy_emperor = False
+default ach_victory_spain = False
+default ach_people_reformer = False
+default ach_welfare_state = False
+default ach_militarist = False
+default ach_diplomatic_victory = False
+default ach_merciful_king = False
+default ach_completionist = False
+default ach_secret_five_runs = False
+default ach_secret_every_death = False
+default ach_secret_caretaker = False
+default ach_caretaker_education = False
+default ach_caretaker_housing = False
+default ach_caretaker_shelters = False
+default ach_caretaker_healthcare = False
+default ach_caretaker_social_security = False
+default ach_caretaker_nutrition = False
+default ach_secret_death_assassination = False
+default ach_secret_death_accident = False
+default ach_secret_death_natural = False
 
+init python:
+    achievement_defs = {
+        "first_decision": "First Decision",
+        "assassin": "Assassin",
+        "state_owned_business": "State-Owned Business",
+        "rich_taxation": "Rich Taxation",
+        "secret_police": "Secret Police",
+        "united_iberia": "Iberian Unifier",
+        "democratic_return": "Democratic Return",
+        "anarchist_vision": "Anarchist Vision",
+        "monarchy_emperor": "Monarchy Emperor",
+        "victory_spain": "Victory in Spain",
+        "people_reformer": "People's Reformer",
+        "welfare_state": "Welfare State",
+        "militarist": "Militarist",
+        "diplomatic_victory": "Diplomatic Victory",
+        "merciful_king": "Merciful King",
+        "completionist": "Presidential Legacy",
+        "secret_five_runs": "Seasoned President",
+        "secret_every_death": "Grim Archivist",
+        "secret_caretaker": "Caring Steward",
+    }
 
+    def award_achievement(name):
+        variable = "ach_" + name
+        if not getattr(renpy.store, variable, False):
+            setattr(renpy.store, variable, True)
+            renpy.notify("Achievement unlocked: " + achievement_defs.get(name, name))
+
+            if name != "completionist":
+                completion_achievements = [
+                    "first_decision",
+                    "assassin",
+                    "state_owned_business",
+                    "rich_taxation",
+                    "secret_police",
+                    "united_iberia",
+                    "democratic_return",
+                    "anarchist_vision",
+                    "monarchy_emperor",
+                    "victory_spain",
+                    "people_reformer",
+                    "welfare_state",
+                    "militarist",
+                    "diplomatic_victory",
+                    "merciful_king",
+                    "secret_five_runs",
+                    "secret_every_death",
+                    "secret_caretaker",
+                ]
+                if all(getattr(renpy.store, "ach_" + a, False) for a in completion_achievements):
+                    award_achievement("completionist")
+
+    def maybe_award_caretaker():
+        if not getattr(renpy.store, "ach_secret_caretaker", False):
+            keys = [
+                "ach_caretaker_education",
+                "ach_caretaker_housing",
+                "ach_caretaker_shelters",
+                "ach_caretaker_healthcare",
+                "ach_caretaker_social_security",
+                "ach_caretaker_nutrition",
+            ]
+            if all(getattr(renpy.store, key, False) for key in keys):
+                award_achievement("secret_caretaker")
+
+    def maybe_award_secret_death():
+        if not getattr(renpy.store, "ach_secret_every_death", False):
+            if (
+                getattr(renpy.store, "ach_secret_death_assassination", False)
+                and getattr(renpy.store, "ach_secret_death_accident", False)
+                and getattr(renpy.store, "ach_secret_death_natural", False)
+            ):
+                award_achievement("secret_every_death")
+
+init -2 python:
+    # Fallback defaults for variables that may be missing from older saves or broken state.
+    # The normal Ren'Py defaults are declared above with the `default` statements.
+    defaults = {
+        "education": 60,
+        "national_budget": 1000,
+        "welfare": 60,
+        "inhabitants": 40000000,
+        "corruption": 5,
+        "popularity": 60,
+        "ideology": "Democracy",
+        "power": 60,
+        "taxes": 20,
+        "leader": 0,
+        "militia": 0,
+        "military": 0,
+        "days": 0,
+        "playthroughs": 0,
+        "ach_first_decision": False,
+        "ach_assassin": False,
+        "ach_state_owned_business": False,
+        "ach_rich_taxation": False,
+        "ach_secret_police": False,
+        "ach_united_iberia": False,
+        "ach_democratic_return": False,
+        "ach_anarchist_vision": False,
+        "ach_monarchy_emperor": False,
+        "ach_victory_spain": False,
+        "ach_people_reformer": False,
+        "ach_welfare_state": False,
+        "ach_militarist": False,
+        "ach_diplomatic_victory": False,
+        "ach_merciful_king": False,
+        "ach_completionist": False,
+        "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
+            "first_decision": "First Decision",
+            "assassin": "Assassin",
+            "state_owned_business": "State-Owned Business",
+            "rich_taxation": "Rich Taxation",
+            "secret_police": "Secret Police",
+            "united_iberia": "Iberian Unifier",
+            "democratic_return": "Democratic Return",
+            "anarchist_vision": "Anarchist Vision",
+            "monarchy_emperor": "Monarchy Emperor",
+            "victory_spain": "Victory in Spain",
+            "people_reformer": "People's Reformer",
+            "welfare_state": "Welfare State",
+            "militarist": "Militarist",
+            "diplomatic_victory": "Diplomatic Victory",
+            "merciful_king": "Merciful King",
+            "completionist": "Presidential Legacy",
+            "secret_five_runs": "Seasoned President",
+            "secret_every_death": "Grim Archivist",
+            "secret_caretaker": "Caring Steward",
+        },
+    }
+
+    for name, value in defaults.items():
+        if not hasattr(renpy.store, name):
+            setattr(renpy.store, name, value)
 
 screen stats():
 
@@ -43,17 +204,48 @@ screen stats():
 
             text "Stats" size 30
 
-            text "Education: [education]" size 20
-            text "[national_budget >= 1000 and 'National Budget: ' + '{:.1f}'.format(national_budget/1000) + ' trillion' or 'National Budget: ' + '{:.1f}'.format(national_budget) + ' billion']" size 20
-            text "Welfare: [welfare]" size 20
-            text "Inhabitants: [inhabitants]" size 20
-            text "Corruption: [corruption]" size 20
-            text "Popularity: [popularity]" size 20
-            text "Ideology: [ideology]" size 20
-            text "Power: [power]" size 20
-            text "Taxes: [taxes] billion" size 20
-            text "Playthroughs: [playthroughs]" size 20
+            text "Education: [store.education]" size 20
+            text "[store.national_budget >= 1000 and 'National Budget: ' + '{:.1f}'.format(store.national_budget/1000) + ' trillion' or 'National Budget: ' + '{:.1f}'.format(store.national_budget) + ' billion']" size 20
+            text "Welfare: [store.welfare]" size 20
+            text "Inhabitants: [store.inhabitants]" size 20
+            text "Corruption: [store.corruption]" size 20
+            text "Popularity: [store.popularity]" size 20
+            text "Ideology: [store.ideology]" size 20
+            text "Power: [store.power]" size 20
+            text "Taxes: [store.taxes] billion" size 20
+            text "Playthroughs: [store.playthroughs]" size 20
+            textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
             textbutton "Close stats" action Return() xalign 1.0
+
+screen achievements():
+
+    tag menu
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20)
+        xsize 800
+        ysize 500
+
+        vbox:
+            spacing 10
+
+            text "Achievements" size 30
+
+            for name, label in achievement_defs.items():
+                if name.startswith("secret_") and not getattr(store, "ach_" + name, False):
+                    text "Secret Achievement - Locked" size 18 color "#888"
+                else:
+                    if getattr(store, "ach_" + name, False):
+                        if name.startswith("secret_"):
+                            text "[label] - Unlocked" size 18 color "#800080"
+                        else:
+                            text "[label] - Unlocked" size 18 color (getattr(store, "ach_completionist", False) and "#ffd700" or "#fff")
+                    else:
+                        text "[label] - Locked" size 18 color (getattr(store, "ach_completionist", False) and "#ffd700" or "#888")
+
+            textbutton "Close" action Return() xalign 0.5
 
 
 # The game starts here.
@@ -63,8 +255,6 @@ label start:
     # Show a background. This uses a placeholder by default, but you can
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
-
-    
 
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
@@ -79,6 +269,7 @@ label start:
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
     
+    show vccap
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
     p "Hello Vice President, I am ready to listen to your proposal"
 
@@ -90,14 +281,18 @@ label start:
 
 label begin:
     vc "Would you like to invest in education?"
-
+    show vccap
     menu:
         "Approve":
             $ education += 5
             $ national_budget -= 10
+            $ ach_caretaker_education = True
+            $ maybe_award_caretaker()
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
             vc "You have declined to invest in education."
+
+    $ award_achievement("first_decision")
     
     vc "Would you like to invest in infrastructure?"
     
@@ -109,7 +304,7 @@ label begin:
         "Decline":
             vc "You have declined to invest in infrastructure."
     
-    vc "would you like to promote equal rights?"
+    vc "Would you like to promote equal rights?"
 
     menu: 
         "Approve":
@@ -123,22 +318,28 @@ label begin:
     
 
 label ass:
+    show vccap
     vc "Would you like to Assinate people that fight for equal rights?"
     menu:
         "Approve":
             vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government."
             $ popularity -= 10
+            $ award_achievement("assassin")
             jump fas
         "Decline":
             vc "You have declined to assinate people that fight for equal rights."
             jump cap
 label cap:  
+    show vccap
     vc "Would you like to invest in better housing?"
     menu:
         "Approve":
             vc "You have decided to invest in better housing, this will increase the welfare of the country but will also decrease the national budget."
             $ welfare += 15
             $ national_budget -= 50
+            $ ach_caretaker_housing = True
+            $ maybe_award_caretaker()
+            $ award_achievement("people_reformer")
         "Decline":
             vc "You have declined to invest in better housing."
             $ popularity -= 2
@@ -151,6 +352,7 @@ label cap:
             $ national_budget += 75
             $ popularity -= 10
             $ welfare += 3
+            $ award_achievement("state_owned_business")
             jump com
         "Decline":
             vc "You have declined to make the buisness state-owned."
@@ -163,12 +365,16 @@ label cap:
             $ taxes += 5
             $ national_budget += 25
             $ popularity -= 5
+            $ award_achievement("rich_taxation")
             vc "Use the money to improve homeless shelters and public transportation."
             menu:
                 "Approve":
                     vc "You have decided to use the money to improve homeless shelters and public transportation, this will increase the welfare of the country but will also decrease the national budget."
                     $ welfare += 5
                     $ national_budget -= 10
+                    $ ach_caretaker_shelters = True
+                    $ maybe_award_caretaker()
+                    $ award_achievement("welfare_state")
                 "Decline":
                     vc "You have declined to use the money to improve homeless shelters and public transportation."
                     $ popularity -= 2
@@ -213,6 +419,8 @@ label cap:
                             vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 100
+                            $ ach_caretaker_healthcare = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better healthcare."
                             $ popularity -= 2
@@ -222,6 +430,8 @@ label cap:
                             vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 75
+                            $ ach_caretaker_social_security = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better social security."
                             $ popularity -= 2
@@ -231,6 +441,8 @@ label cap:
                             vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 50
+                            $ ach_caretaker_nutrition = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better nutrition for the poor."
                             $ popularity -= 2
@@ -238,8 +450,7 @@ label cap:
                     jump end
 
 label com:
-    $ ideology = "Communist"
-    vc "you are now a communist country"
+    show vccap
     vc "Would you like to promote equality?"
 
     menu:
@@ -274,6 +485,7 @@ label com:
             jump com2
 
 label com2:
+    show vccap
     vc "Would you like to give power to the workers?"
     menu:
         "Approve":
@@ -281,6 +493,10 @@ label com2:
             $ popularity += 20
         "Decline":
             vc "You have declined to give power to the workers."
+    hide vccap
+    show vccom
+    $ ideology = "Communism"
+    vc "you are now a communist country"
 
     vc "Would you like to make the media state-owned?"
     menu:
@@ -311,6 +527,7 @@ label com2:
             $ power += 20
             $ popularity -= 20
             $ national_budget -= 1.5
+            $ award_achievement("secret_police")
             
             vc "would you like remove political opponents?"
             menu:
@@ -341,6 +558,7 @@ label com2:
 
 
 label com3:
+    show vccom
     vc "Would you like to reinstate elections?"
     menu:
         "Approve":
@@ -350,6 +568,7 @@ label com3:
             jump co1
 
 label com4:
+    show vccom
     vc "Would you like to unite the country under one banner?"
     menu:
         "Approve":
@@ -359,7 +578,7 @@ label com4:
         "Decline":
             jump co1
 
-    show VCCOM
+    
     vc "Would you like to reinstate the militia?"
     menu:
         "Approve":
@@ -393,6 +612,7 @@ label com4:
             vc "You have declined to spread the revolution."
             jump co1
 label co1:
+    show vccom
     vc "You are about to coup the goverment would you like to proceerd?"
     menu:
         "Approve":
@@ -403,6 +623,7 @@ label co1:
             jump com5
 
 label com5:
+    show vccom
     vc "SIR, YOU FREED THE WORKERS OF PORTUGAL"
     $ inhabitants += 10104552
     $ welfare += 10
@@ -426,6 +647,7 @@ label com5:
             $ popularity -= 10
             $ national_budget -= 50
             $ military = 1
+            $ award_achievement("militarist")
         "Decline":
             vc "You have declined to expand the military."
     vc "Would you like to invest in the workers of iberia?"
@@ -447,6 +669,8 @@ label com5:
     vc "You started a war with spain"
     if military == 0:
         vc "While fighting the spanish army, you send everyone to the frontlines and had nobody left to protect you, so spain was able to assassinate you, you died."
+        $ ach_secret_death_assassination = True
+        $ maybe_award_secret_death()
         jump end
 
     if military == 1:
@@ -456,6 +680,7 @@ label com5:
         $ national_budget -= 100
         $ welfare -= 7
         $ inhabitants += 37147532
+        $ award_achievement("victory_spain")
     
     vc "Would you like to demand Gilbraltar from the UK?"
     menu:
@@ -476,6 +701,7 @@ label com5:
                 $ national_budget += 5
                 $ inhabitants += 300000
                 $ welfare += 2
+                $ award_achievement("diplomatic_victory")
         "Decline":
             vc "You have declined to demand Gilbraltar from the UK."
     vc "Would you like to stomp on Andorra?"
@@ -490,11 +716,14 @@ label com5:
             vc "You have declined to stomp on Andorra."
 
     vc "You have successfully unified the iberian peninsula, the people are happy and you are now the most powerful leader in the Europe good job."
+    $ award_achievement("united_iberia")
     jump end 
     
     
     
 label co2: 
+    hide vccom
+    show vccap
     $ ideology = "Democracy"
     vc "Your country has become a democracy once more"
     vc "woould you want to reform the military"
@@ -532,6 +761,7 @@ label co2:
             vc "You have decided to re-introduce elections and the parliament, this will increase the popularity of the government but will also decrease the power of the government."
             $ popularity += 10
             $ power -= 20
+            $ award_achievement("democratic_return")
             vc "your country is once again a full democracy, but sadly the first thing they wanted to do is hold new elections and they have voted you out of office, you have lost the game."
             jump end
         "Decline":
@@ -545,20 +775,26 @@ label co2:
                 vc "there is no military  so you got overthrown, you have lost the game."
                 jump end
 label milr:
+    show vcmil
     if militia == 1:
         vc "The militia has saved you from being assinated"
     else:
         n "you got assinated because you didn't have a militia to protect you, you have lost the game."
+        $ ach_secret_death_assassination = True
+        $ maybe_award_secret_death()
         jump end
     vc "you executed the conspiritators making the people hate and fear you, but you are still in power."
     $ power += 20
     $ popularity -= 20
     vc "after countless of assasination attempts they finally succeeded and you got assinated, you have lost the game."
+    $ ach_secret_death_assassination = True
+    $ maybe_award_secret_death()
     jump end
 
 
 
 label arch:
+    show vcarc
     $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
 
@@ -595,20 +831,101 @@ label arch:
             na "You disband any and all goverment bodies."
         "Approve":
             na "You disband any and all goverment bodies."
+    hide vcarc
 
     n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
+    $ award_achievement("anarchist_vision")
 
     n "A couple days later, while you are walking home, you get hit by a car and die."
+    $ ach_secret_death_accident = True
+    $ maybe_award_secret_death()
 
     na "The end."
     jump end
 
 label soc:
+    show vccap
     vc "More people started working."
     $ national_budget += 50
+    $ welfare += 5
+    vc "Would you like to nationalise the major industries?"
+    menu:
+        "Approve":
+            vc "You have decided to nationalise the major industries, this will increase the national budget but will also decrease the popularity of the government."
+            $ national_budget += 100
+            $ popularity += 5
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to nationalise the major industries."
+    hide vccap
+    show vcsoc
+    vc "Would you like to introduce a universal healthcare system?"
+    menu:
+        "Approve": 
+            vc "You have decided to introduce a universal healthcare system, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to introduce a universal healthcare system."
+
+    vc "Would you like to introduce an increase in worker ownership?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce an increase in worker ownership, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 5
+            $ national_budget -= 25
+        "Decline":
+            vc "You have declined to introduce an increase in worker ownership."
+
+    vc "Would you like to guarantee housing for all citizens?"
+    menu:
+        "Approve":
+            vc "You have decided to guarantee housing for all citizens, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to guarantee housing for all citizens."
+    vc "Would you like to introduce a 4 day work week?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce a 4 day work week, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare -= 5
+            $ national_budget -= 25
+        "Decline":
+            vc "You have declined to introduce a 4 day work week."
+            jump socgood
+    
+    vc "Would you like to introduce a 3 day work week?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce a 3 day work week, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare -= 10
+            $ national_budget -= 50
+            jump socshit
+        "Decline":
+            vc "You have declined to introduce a 3 day work week."
+            jump socgood
+
+label socshit:
+    show vcsoc
+    vc "You have made the people happy,but your economic growth has flatlined."
+    jump end
+
+label socgood:
+    show vcsoc 
+    vc "The democrats and the socliast are both happy with your decisions and they have decided to work together to make the country better, this has increased the popularity of the government and the welfare of the country."
+    $ popularity += 10
+    $ welfare += 10
+    vc "You have made the people happy and your economic growth is booming."
+    jump end
+    
+
+
 
 label mon:
+    hide vccap
     $ ideology = "Monarchy"
+    show vcmon
     vc "would you like to build a palace for yourself?"
     menu:
         "Approve":
@@ -650,6 +967,7 @@ label mon:
             jump mon2
 
 label mon1:
+    show vcmon
     vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
     $ inhabitants -= 1000
 
@@ -659,17 +977,25 @@ label mon1:
     menu:
         "Approve":
             vc "You have become untouchable and you have become a god in the eyes of the people."
+            $ award_achievement("monarchy_emperor")
             jump end
         "Decline":
             vc "You have declined to make the people worship you as a god."
             jump end
 
 label mon2:
+        show vcmon
         vc "The people liked your decision to not force religion on them and they have accepted you as their king."
+        $ award_achievement("merciful_king")
+        $ ach_secret_death_natural = True
+        $ maybe_award_secret_death()
         vc "You have become a beloved king and you died surrounded by your family and friends."
+        jump end
 label fas:
+    hide vccap
     $ ideology = "Fascist"
     call screen stats
+    show vcfas
     vc "Do you accept to have one man in power?"
 
     menu:
@@ -683,10 +1009,14 @@ label fas:
             jump fasc1
 
 label fasc1:
+    show vcfas
     n " you have been assassinated by a diffrent power in the government, you have lost the game"
+    $ ach_secret_death_assassination = True
+    $ maybe_award_secret_death()
     jump end
 
 label fasc2:
+    show vcfas
     vc "Would you like to invest in a secret police?"
 
     menu:
@@ -694,6 +1024,7 @@ label fasc2:
             vc "You have decided to invest in a secret police, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 10
             $ national_budget -= 0.2
+            $ award_achievement("secret_police")
         "Decline":
             vc "You have declined to invest in a secret police."
     
@@ -704,6 +1035,8 @@ label fasc2:
             $ roll = renpy.random.randint(1, 10)
             if roll == 1:
                 n "The opposition has been able to fight back and you have been assassinated, you have lost the game"
+                $ ach_secret_death_assassination = True
+                $ maybe_award_secret_death()
                 jump end
             elif roll == 2:
                 vc "People have found out about the extermination"
@@ -719,8 +1052,11 @@ label fasc2:
         "Decline":
             vc "You have declined to exterminate the opposition."
             n "Your political opponents didn't like you and they have been able to assassinate you, you have lost the game"
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 label fasc3:
+    show vcfas
     vc "Do you want to introduce propaganda in the media?"
 
     menu: 
@@ -732,9 +1068,12 @@ label fasc3:
         "Decline":
             vc "You have declined to introduce propaganda in the media."
             n "The media has been able to criticize you and you have been assassinated, you have lost the game"
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 
 label fasc4:
+    show vcfas
     vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
     menu:
@@ -749,6 +1088,7 @@ label fasc4:
     
 
 label israel:
+    show vccap
     vc "Do you want to give money to Israel?"
     menu:
         "Approve":
@@ -758,12 +1098,25 @@ label israel:
             jump begin
         "Decline":
             vc "You have been assaninated by the Mossad, you have lost the game."
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 label end:
+    hide vccap
+    hide vccom
+    hide vcfas
+    hide vcmon
+    hide vcmil
+    hide vcarc
+    hide vcsoc
+    hide vctot
+    
     na "Would you like to play again?"
     menu:
         "Yes":
             $ playthroughs += 1
+            if playthroughs >= 5:
+                $ award_achievement("secret_five_runs")
             $ education = 60
             $ national_budget = 1000
             $ welfare = 60
