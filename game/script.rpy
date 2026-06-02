@@ -1,4 +1,4 @@
-﻿# The script of the game goes in this file.
+﻿ # The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -256,8 +256,6 @@ label start:
     # add a file (named either "bg room.png" or "bg room.jpg") to the
     # images directory to show it.
 
-    
-
     # This shows a character sprite. A placeholder is used, but you can
     # replace it by adding a file named "eileen happy.png" to the images
     # directory.
@@ -271,6 +269,7 @@ label start:
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
     
+    show vccap
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
     p "Hello Vice President, I am ready to listen to your proposal"
 
@@ -282,7 +281,7 @@ label start:
 
 label begin:
     vc "Would you like to invest in education?"
-
+    show vccap
     menu:
         "Approve":
             $ education += 5
@@ -305,7 +304,7 @@ label begin:
         "Decline":
             vc "You have declined to invest in infrastructure."
     
-    vc "would you like to promote equal rights?"
+    vc "Would you like to promote equal rights?"
 
     menu: 
         "Approve":
@@ -319,6 +318,7 @@ label begin:
     
 
 label ass:
+    show vccap
     vc "Would you like to Assinate people that fight for equal rights?"
     menu:
         "Approve":
@@ -330,6 +330,7 @@ label ass:
             vc "You have declined to assinate people that fight for equal rights."
             jump cap
 label cap:  
+    show vccap
     vc "Would you like to invest in better housing?"
     menu:
         "Approve":
@@ -449,8 +450,7 @@ label cap:
                     jump end
 
 label com:
-    $ ideology = "Communist"
-    vc "you are now a communist country"
+    show vccap
     vc "Would you like to promote equality?"
 
     menu:
@@ -485,6 +485,7 @@ label com:
             jump com2
 
 label com2:
+    show vccap
     vc "Would you like to give power to the workers?"
     menu:
         "Approve":
@@ -492,6 +493,10 @@ label com2:
             $ popularity += 20
         "Decline":
             vc "You have declined to give power to the workers."
+    hide vccap
+    show vccom
+    $ ideology = "Communism"
+    vc "you are now a communist country"
 
     vc "Would you like to make the media state-owned?"
     menu:
@@ -553,6 +558,7 @@ label com2:
 
 
 label com3:
+    show vccom
     vc "Would you like to reinstate elections?"
     menu:
         "Approve":
@@ -562,6 +568,7 @@ label com3:
             jump co1
 
 label com4:
+    show vccom
     vc "Would you like to unite the country under one banner?"
     menu:
         "Approve":
@@ -571,7 +578,7 @@ label com4:
         "Decline":
             jump co1
 
-    show VCCOM
+    
     vc "Would you like to reinstate the militia?"
     menu:
         "Approve":
@@ -605,6 +612,7 @@ label com4:
             vc "You have declined to spread the revolution."
             jump co1
 label co1:
+    show vccom
     vc "You are about to coup the goverment would you like to proceerd?"
     menu:
         "Approve":
@@ -615,6 +623,7 @@ label co1:
             jump com5
 
 label com5:
+    show vccom
     vc "SIR, YOU FREED THE WORKERS OF PORTUGAL"
     $ inhabitants += 10104552
     $ welfare += 10
@@ -713,6 +722,8 @@ label com5:
     
     
 label co2: 
+    hide vccom
+    show vccap
     $ ideology = "Democracy"
     vc "Your country has become a democracy once more"
     vc "woould you want to reform the military"
@@ -764,6 +775,7 @@ label co2:
                 vc "there is no military  so you got overthrown, you have lost the game."
                 jump end
 label milr:
+    show vcmil
     if militia == 1:
         vc "The militia has saved you from being assinated"
     else:
@@ -782,6 +794,7 @@ label milr:
 
 
 label arch:
+    show vcarc
     $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
 
@@ -818,6 +831,7 @@ label arch:
             na "You disband any and all goverment bodies."
         "Approve":
             na "You disband any and all goverment bodies."
+    hide vcarc
 
     n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
     $ award_achievement("anarchist_vision")
@@ -830,11 +844,88 @@ label arch:
     jump end
 
 label soc:
+    show vccap
     vc "More people started working."
     $ national_budget += 50
+    $ welfare += 5
+    vc "Would you like to nationalise the major industries?"
+    menu:
+        "Approve":
+            vc "You have decided to nationalise the major industries, this will increase the national budget but will also decrease the popularity of the government."
+            $ national_budget += 100
+            $ popularity += 5
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to nationalise the major industries."
+    hide vccap
+    show vcsoc
+    vc "Would you like to introduce a universal healthcare system?"
+    menu:
+        "Approve": 
+            vc "You have decided to introduce a universal healthcare system, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to introduce a universal healthcare system."
+
+    vc "Would you like to introduce an increase in worker ownership?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce an increase in worker ownership, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 5
+            $ national_budget -= 25
+        "Decline":
+            vc "You have declined to introduce an increase in worker ownership."
+
+    vc "Would you like to guarantee housing for all citizens?"
+    menu:
+        "Approve":
+            vc "You have decided to guarantee housing for all citizens, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to guarantee housing for all citizens."
+    vc "Would you like to introduce a 4 day work week?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce a 4 day work week, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare -= 5
+            $ national_budget -= 25
+        "Decline":
+            vc "You have declined to introduce a 4 day work week."
+            jump socgood
+    
+    vc "Would you like to introduce a 3 day work week?"
+    menu:
+        "Approve":
+            vc "You have decided to introduce a 3 day work week, this will increase the welfare of the country but will also decrease the national budget."
+            $ welfare -= 10
+            $ national_budget -= 50
+            jump socshit
+        "Decline":
+            vc "You have declined to introduce a 3 day work week."
+            jump socgood
+
+label socshit:
+    show vcsoc
+    vc "You have made the people happy,but your economic growth has flatlined."
+    jump end
+
+label socgood:
+    show vcsoc 
+    vc "The democrats and the socliast are both happy with your decisions and they have decided to work together to make the country better, this has increased the popularity of the government and the welfare of the country."
+    $ popularity += 10
+    $ welfare += 10
+    vc "You have made the people happy and your economic growth is booming."
+    jump end
+    
+
+
 
 label mon:
+    hide vccap
     $ ideology = "Monarchy"
+    show vcmon
     vc "would you like to build a palace for yourself?"
     menu:
         "Approve":
@@ -876,6 +967,7 @@ label mon:
             jump mon2
 
 label mon1:
+    show vcmon
     vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
     $ inhabitants -= 1000
 
@@ -892,6 +984,7 @@ label mon1:
             jump end
 
 label mon2:
+        show vcmon
         vc "The people liked your decision to not force religion on them and they have accepted you as their king."
         $ award_achievement("merciful_king")
         $ ach_secret_death_natural = True
@@ -899,8 +992,10 @@ label mon2:
         vc "You have become a beloved king and you died surrounded by your family and friends."
         jump end
 label fas:
+    hide vccap
     $ ideology = "Fascist"
     call screen stats
+    show vcfas
     vc "Do you accept to have one man in power?"
 
     menu:
@@ -914,12 +1009,14 @@ label fas:
             jump fasc1
 
 label fasc1:
+    show vcfas
     n " you have been assassinated by a diffrent power in the government, you have lost the game"
     $ ach_secret_death_assassination = True
     $ maybe_award_secret_death()
     jump end
 
 label fasc2:
+    show vcfas
     vc "Would you like to invest in a secret police?"
 
     menu:
@@ -959,6 +1056,7 @@ label fasc2:
             $ maybe_award_secret_death()
             jump end
 label fasc3:
+    show vcfas
     vc "Do you want to introduce propaganda in the media?"
 
     menu: 
@@ -975,6 +1073,7 @@ label fasc3:
             jump end
 
 label fasc4:
+    show vcfas
     vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
     menu:
@@ -989,6 +1088,7 @@ label fasc4:
     
 
 label israel:
+    show vccap
     vc "Do you want to give money to Israel?"
     menu:
         "Approve":
@@ -1002,6 +1102,15 @@ label israel:
             $ maybe_award_secret_death()
             jump end
 label end:
+    hide vccap
+    hide vccom
+    hide vcfas
+    hide vcmon
+    hide vcmil
+    hide vcarc
+    hide vcsoc
+    hide vctot
+    
     na "Would you like to play again?"
     menu:
         "Yes":
