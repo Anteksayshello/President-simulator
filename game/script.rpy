@@ -35,6 +35,24 @@ default ach_democratic_return = False
 default ach_anarchist_vision = False
 default ach_monarchy_emperor = False
 default ach_victory_spain = False
+default ach_people_reformer = False
+default ach_welfare_state = False
+default ach_militarist = False
+default ach_diplomatic_victory = False
+default ach_merciful_king = False
+default ach_completionist = False
+default ach_secret_five_runs = False
+default ach_secret_every_death = False
+default ach_secret_caretaker = False
+default ach_caretaker_education = False
+default ach_caretaker_housing = False
+default ach_caretaker_shelters = False
+default ach_caretaker_healthcare = False
+default ach_caretaker_social_security = False
+default ach_caretaker_nutrition = False
+default ach_secret_death_assassination = False
+default ach_secret_death_accident = False
+default ach_secret_death_natural = False
 
 init python:
     achievement_defs = {
@@ -48,6 +66,15 @@ init python:
         "anarchist_vision": "Anarchist Vision",
         "monarchy_emperor": "Monarchy Emperor",
         "victory_spain": "Victory in Spain",
+        "people_reformer": "People's Reformer",
+        "welfare_state": "Welfare State",
+        "militarist": "Militarist",
+        "diplomatic_victory": "Diplomatic Victory",
+        "merciful_king": "Merciful King",
+        "completionist": "Presidential Legacy",
+        "secret_five_runs": "Seasoned President",
+        "secret_every_death": "Grim Archivist",
+        "secret_caretaker": "Caring Steward",
     }
 
     def award_achievement(name):
@@ -55,6 +82,52 @@ init python:
         if not getattr(renpy.store, variable, False):
             setattr(renpy.store, variable, True)
             renpy.notify("Achievement unlocked: " + achievement_defs.get(name, name))
+
+            if name != "completionist":
+                completion_achievements = [
+                    "first_decision",
+                    "assassin",
+                    "state_owned_business",
+                    "rich_taxation",
+                    "secret_police",
+                    "united_iberia",
+                    "democratic_return",
+                    "anarchist_vision",
+                    "monarchy_emperor",
+                    "victory_spain",
+                    "people_reformer",
+                    "welfare_state",
+                    "militarist",
+                    "diplomatic_victory",
+                    "merciful_king",
+                    "secret_five_runs",
+                    "secret_every_death",
+                    "secret_caretaker",
+                ]
+                if all(getattr(renpy.store, "ach_" + a, False) for a in completion_achievements):
+                    award_achievement("completionist")
+
+    def maybe_award_caretaker():
+        if not getattr(renpy.store, "ach_secret_caretaker", False):
+            keys = [
+                "ach_caretaker_education",
+                "ach_caretaker_housing",
+                "ach_caretaker_shelters",
+                "ach_caretaker_healthcare",
+                "ach_caretaker_social_security",
+                "ach_caretaker_nutrition",
+            ]
+            if all(getattr(renpy.store, key, False) for key in keys):
+                award_achievement("secret_caretaker")
+
+    def maybe_award_secret_death():
+        if not getattr(renpy.store, "ach_secret_every_death", False):
+            if (
+                getattr(renpy.store, "ach_secret_death_assassination", False)
+                and getattr(renpy.store, "ach_secret_death_accident", False)
+                and getattr(renpy.store, "ach_secret_death_natural", False)
+            ):
+                award_achievement("secret_every_death")
 
 init -2 python:
     # Fallback defaults for variables that may be missing from older saves or broken state.
@@ -84,6 +157,12 @@ init -2 python:
         "ach_anarchist_vision": False,
         "ach_monarchy_emperor": False,
         "ach_victory_spain": False,
+        "ach_people_reformer": False,
+        "ach_welfare_state": False,
+        "ach_militarist": False,
+        "ach_diplomatic_victory": False,
+        "ach_merciful_king": False,
+        "ach_completionist": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -95,6 +174,15 @@ init -2 python:
             "anarchist_vision": "Anarchist Vision",
             "monarchy_emperor": "Monarchy Emperor",
             "victory_spain": "Victory in Spain",
+            "people_reformer": "People's Reformer",
+            "welfare_state": "Welfare State",
+            "militarist": "Militarist",
+            "diplomatic_victory": "Diplomatic Victory",
+            "merciful_king": "Merciful King",
+            "completionist": "Presidential Legacy",
+            "secret_five_runs": "Seasoned President",
+            "secret_every_death": "Grim Archivist",
+            "secret_caretaker": "Caring Steward",
         },
     }
 
@@ -146,10 +234,16 @@ screen achievements():
             text "Achievements" size 30
 
             for name, label in achievement_defs.items():
-                if getattr(store, "ach_" + name, False):
-                    text "[label] - Unlocked" size 18
+                if name.startswith("secret_") and not getattr(store, "ach_" + name, False):
+                    text "Secret Achievement - Locked" size 18 color "#888"
                 else:
-                    text "[label] - Locked" size 18 color "#888"
+                    if getattr(store, "ach_" + name, False):
+                        if name.startswith("secret_"):
+                            text "[label] - Unlocked" size 18 color "#800080"
+                        else:
+                            text "[label] - Unlocked" size 18 color (getattr(store, "ach_completionist", False) and "#ffd700" or "#fff")
+                    else:
+                        text "[label] - Locked" size 18 color (getattr(store, "ach_completionist", False) and "#ffd700" or "#888")
 
             textbutton "Close" action Return() xalign 0.5
 
@@ -193,6 +287,8 @@ label begin:
         "Approve":
             $ education += 5
             $ national_budget -= 10
+            $ ach_caretaker_education = True
+            $ maybe_award_caretaker()
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
             vc "You have declined to invest in education."
@@ -240,6 +336,9 @@ label cap:
             vc "You have decided to invest in better housing, this will increase the welfare of the country but will also decrease the national budget."
             $ welfare += 15
             $ national_budget -= 50
+            $ ach_caretaker_housing = True
+            $ maybe_award_caretaker()
+            $ award_achievement("people_reformer")
         "Decline":
             vc "You have declined to invest in better housing."
             $ popularity -= 2
@@ -272,6 +371,9 @@ label cap:
                     vc "You have decided to use the money to improve homeless shelters and public transportation, this will increase the welfare of the country but will also decrease the national budget."
                     $ welfare += 5
                     $ national_budget -= 10
+                    $ ach_caretaker_shelters = True
+                    $ maybe_award_caretaker()
+                    $ award_achievement("welfare_state")
                 "Decline":
                     vc "You have declined to use the money to improve homeless shelters and public transportation."
                     $ popularity -= 2
@@ -316,6 +418,8 @@ label cap:
                             vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 100
+                            $ ach_caretaker_healthcare = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better healthcare."
                             $ popularity -= 2
@@ -325,6 +429,8 @@ label cap:
                             vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 75
+                            $ ach_caretaker_social_security = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better social security."
                             $ popularity -= 2
@@ -334,6 +440,8 @@ label cap:
                             vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
                             $ welfare += 3
                             $ national_budget -= 50
+                            $ ach_caretaker_nutrition = True
+                            $ maybe_award_caretaker()
                         "Decline":
                             vc "You have declined to invest in better nutrition for the poor."
                             $ popularity -= 2
@@ -530,6 +638,7 @@ label com5:
             $ popularity -= 10
             $ national_budget -= 50
             $ military = 1
+            $ award_achievement("militarist")
         "Decline":
             vc "You have declined to expand the military."
     vc "Would you like to invest in the workers of iberia?"
@@ -551,6 +660,8 @@ label com5:
     vc "You started a war with spain"
     if military == 0:
         vc "While fighting the spanish army, you send everyone to the frontlines and had nobody left to protect you, so spain was able to assassinate you, you died."
+        $ ach_secret_death_assassination = True
+        $ maybe_award_secret_death()
         jump end
 
     if military == 1:
@@ -581,6 +692,7 @@ label com5:
                 $ national_budget += 5
                 $ inhabitants += 300000
                 $ welfare += 2
+                $ award_achievement("diplomatic_victory")
         "Decline":
             vc "You have declined to demand Gilbraltar from the UK."
     vc "Would you like to stomp on Andorra?"
@@ -656,11 +768,15 @@ label milr:
         vc "The militia has saved you from being assinated"
     else:
         n "you got assinated because you didn't have a militia to protect you, you have lost the game."
+        $ ach_secret_death_assassination = True
+        $ maybe_award_secret_death()
         jump end
     vc "you executed the conspiritators making the people hate and fear you, but you are still in power."
     $ power += 20
     $ popularity -= 20
     vc "after countless of assasination attempts they finally succeeded and you got assinated, you have lost the game."
+    $ ach_secret_death_assassination = True
+    $ maybe_award_secret_death()
     jump end
 
 
@@ -707,6 +823,8 @@ label arch:
     $ award_achievement("anarchist_vision")
 
     n "A couple days later, while you are walking home, you get hit by a car and die."
+    $ ach_secret_death_accident = True
+    $ maybe_award_secret_death()
 
     na "The end."
     jump end
@@ -775,7 +893,11 @@ label mon1:
 
 label mon2:
         vc "The people liked your decision to not force religion on them and they have accepted you as their king."
+        $ award_achievement("merciful_king")
+        $ ach_secret_death_natural = True
+        $ maybe_award_secret_death()
         vc "You have become a beloved king and you died surrounded by your family and friends."
+        jump end
 label fas:
     $ ideology = "Fascist"
     call screen stats
@@ -793,6 +915,8 @@ label fas:
 
 label fasc1:
     n " you have been assassinated by a diffrent power in the government, you have lost the game"
+    $ ach_secret_death_assassination = True
+    $ maybe_award_secret_death()
     jump end
 
 label fasc2:
@@ -814,6 +938,8 @@ label fasc2:
             $ roll = renpy.random.randint(1, 10)
             if roll == 1:
                 n "The opposition has been able to fight back and you have been assassinated, you have lost the game"
+                $ ach_secret_death_assassination = True
+                $ maybe_award_secret_death()
                 jump end
             elif roll == 2:
                 vc "People have found out about the extermination"
@@ -829,6 +955,8 @@ label fasc2:
         "Decline":
             vc "You have declined to exterminate the opposition."
             n "Your political opponents didn't like you and they have been able to assassinate you, you have lost the game"
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 label fasc3:
     vc "Do you want to introduce propaganda in the media?"
@@ -842,6 +970,8 @@ label fasc3:
         "Decline":
             vc "You have declined to introduce propaganda in the media."
             n "The media has been able to criticize you and you have been assassinated, you have lost the game"
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 
 label fasc4:
@@ -868,12 +998,16 @@ label israel:
             jump begin
         "Decline":
             vc "You have been assaninated by the Mossad, you have lost the game."
+            $ ach_secret_death_assassination = True
+            $ maybe_award_secret_death()
             jump end
 label end:
     na "Would you like to play again?"
     menu:
         "Yes":
             $ playthroughs += 1
+            if playthroughs >= 5:
+                $ award_achievement("secret_five_runs")
             $ education = 60
             $ national_budget = 1000
             $ welfare = 60
