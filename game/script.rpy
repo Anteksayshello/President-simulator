@@ -13,7 +13,6 @@ default national_budget = 1000
 default welfare = 60
 default inhabitants = 40000000
 default corruption = 5
-default education = 60
 default popularity = 60
 default ideology = "Democracy"
 default power = 60
@@ -26,8 +25,82 @@ default military = 0
 default days = 0
 default playthroughs = 0
 
+default ach_first_decision = False
+default ach_assassin = False
+default ach_state_owned_business = False
+default ach_rich_taxation = False
+default ach_secret_police = False
+default ach_united_iberia = False
+default ach_democratic_return = False
+default ach_anarchist_vision = False
+default ach_monarchy_emperor = False
+default ach_victory_spain = False
 
+init python:
+    achievement_defs = {
+        "first_decision": "First Decision",
+        "assassin": "Assassin",
+        "state_owned_business": "State-Owned Business",
+        "rich_taxation": "Rich Taxation",
+        "secret_police": "Secret Police",
+        "united_iberia": "Iberian Unifier",
+        "democratic_return": "Democratic Return",
+        "anarchist_vision": "Anarchist Vision",
+        "monarchy_emperor": "Monarchy Emperor",
+        "victory_spain": "Victory in Spain",
+    }
 
+    def award_achievement(name):
+        variable = "ach_" + name
+        if not getattr(renpy.store, variable, False):
+            setattr(renpy.store, variable, True)
+            renpy.notify("Achievement unlocked: " + achievement_defs.get(name, name))
+
+init -2 python:
+    # Fallback defaults for variables that may be missing from older saves or broken state.
+    # The normal Ren'Py defaults are declared above with the `default` statements.
+    defaults = {
+        "education": 60,
+        "national_budget": 1000,
+        "welfare": 60,
+        "inhabitants": 40000000,
+        "corruption": 5,
+        "popularity": 60,
+        "ideology": "Democracy",
+        "power": 60,
+        "taxes": 20,
+        "leader": 0,
+        "militia": 0,
+        "military": 0,
+        "days": 0,
+        "playthroughs": 0,
+        "ach_first_decision": False,
+        "ach_assassin": False,
+        "ach_state_owned_business": False,
+        "ach_rich_taxation": False,
+        "ach_secret_police": False,
+        "ach_united_iberia": False,
+        "ach_democratic_return": False,
+        "ach_anarchist_vision": False,
+        "ach_monarchy_emperor": False,
+        "ach_victory_spain": False,
+        "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
+            "first_decision": "First Decision",
+            "assassin": "Assassin",
+            "state_owned_business": "State-Owned Business",
+            "rich_taxation": "Rich Taxation",
+            "secret_police": "Secret Police",
+            "united_iberia": "Iberian Unifier",
+            "democratic_return": "Democratic Return",
+            "anarchist_vision": "Anarchist Vision",
+            "monarchy_emperor": "Monarchy Emperor",
+            "victory_spain": "Victory in Spain",
+        },
+    }
+
+    for name, value in defaults.items():
+        if not hasattr(renpy.store, name):
+            setattr(renpy.store, name, value)
 
 screen stats():
 
@@ -43,17 +116,42 @@ screen stats():
 
             text "Stats" size 30
 
-            text "Education: [education]" size 20
-            text "[national_budget >= 1000 and 'National Budget: ' + '{:.1f}'.format(national_budget/1000) + ' trillion' or 'National Budget: ' + '{:.1f}'.format(national_budget) + ' billion']" size 20
-            text "Welfare: [welfare]" size 20
-            text "Inhabitants: [inhabitants]" size 20
-            text "Corruption: [corruption]" size 20
-            text "Popularity: [popularity]" size 20
-            text "Ideology: [ideology]" size 20
-            text "Power: [power]" size 20
-            text "Taxes: [taxes] billion" size 20
-            text "Playthroughs: [playthroughs]" size 20
+            text "Education: [store.education]" size 20
+            text "[store.national_budget >= 1000 and 'National Budget: ' + '{:.1f}'.format(store.national_budget/1000) + ' trillion' or 'National Budget: ' + '{:.1f}'.format(store.national_budget) + ' billion']" size 20
+            text "Welfare: [store.welfare]" size 20
+            text "Inhabitants: [store.inhabitants]" size 20
+            text "Corruption: [store.corruption]" size 20
+            text "Popularity: [store.popularity]" size 20
+            text "Ideology: [store.ideology]" size 20
+            text "Power: [store.power]" size 20
+            text "Taxes: [store.taxes] billion" size 20
+            text "Playthroughs: [store.playthroughs]" size 20
+            textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
             textbutton "Close stats" action Return() xalign 1.0
+
+screen achievements():
+
+    tag menu
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20)
+        xsize 800
+        ysize 500
+
+        vbox:
+            spacing 10
+
+            text "Achievements" size 30
+
+            for name, label in achievement_defs.items():
+                if getattr(store, "ach_" + name, False):
+                    text "[label] - Unlocked" size 18
+                else:
+                    text "[label] - Locked" size 18 color "#888"
+
+            textbutton "Close" action Return() xalign 0.5
 
 
 # The game starts here.
@@ -98,6 +196,8 @@ label begin:
             vc "You have decided to invest in education. This will increase the education level of the country but will also decrease the national budget."
         "Decline":
             vc "You have declined to invest in education."
+
+    $ award_achievement("first_decision")
     
     vc "Would you like to invest in infrastructure?"
     
@@ -128,6 +228,7 @@ label ass:
         "Approve":
             vc "You have decided to assinate people that fight for equal rights, this will decrease the popularity of the government."
             $ popularity -= 10
+            $ award_achievement("assassin")
             jump fas
         "Decline":
             vc "You have declined to assinate people that fight for equal rights."
@@ -151,6 +252,7 @@ label cap:
             $ national_budget += 75
             $ popularity -= 10
             $ welfare += 3
+            $ award_achievement("state_owned_business")
             jump com
         "Decline":
             vc "You have declined to make the buisness state-owned."
@@ -163,6 +265,7 @@ label cap:
             $ taxes += 5
             $ national_budget += 25
             $ popularity -= 5
+            $ award_achievement("rich_taxation")
             vc "Use the money to improve homeless shelters and public transportation."
             menu:
                 "Approve":
@@ -311,6 +414,7 @@ label com2:
             $ power += 20
             $ popularity -= 20
             $ national_budget -= 1.5
+            $ award_achievement("secret_police")
             
             vc "would you like remove political opponents?"
             menu:
@@ -456,6 +560,7 @@ label com5:
         $ national_budget -= 100
         $ welfare -= 7
         $ inhabitants += 37147532
+        $ award_achievement("victory_spain")
     
     vc "Would you like to demand Gilbraltar from the UK?"
     menu:
@@ -490,6 +595,7 @@ label com5:
             vc "You have declined to stomp on Andorra."
 
     vc "You have successfully unified the iberian peninsula, the people are happy and you are now the most powerful leader in the Europe good job."
+    $ award_achievement("united_iberia")
     jump end 
     
     
@@ -532,6 +638,7 @@ label co2:
             vc "You have decided to re-introduce elections and the parliament, this will increase the popularity of the government but will also decrease the power of the government."
             $ popularity += 10
             $ power -= 20
+            $ award_achievement("democratic_return")
             vc "your country is once again a full democracy, but sadly the first thing they wanted to do is hold new elections and they have voted you out of office, you have lost the game."
             jump end
         "Decline":
@@ -597,6 +704,7 @@ label arch:
             na "You disband any and all goverment bodies."
 
     n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
+    $ award_achievement("anarchist_vision")
 
     n "A couple days later, while you are walking home, you get hit by a car and die."
 
@@ -659,6 +767,7 @@ label mon1:
     menu:
         "Approve":
             vc "You have become untouchable and you have become a god in the eyes of the people."
+            $ award_achievement("monarchy_emperor")
             jump end
         "Decline":
             vc "You have declined to make the people worship you as a god."
@@ -694,6 +803,7 @@ label fasc2:
             vc "You have decided to invest in a secret police, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 10
             $ national_budget -= 0.2
+            $ award_achievement("secret_police")
         "Decline":
             vc "You have declined to invest in a secret police."
     
