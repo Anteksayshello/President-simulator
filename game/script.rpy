@@ -1,4 +1,4 @@
-﻿ # The script of the game goes in this file.
+﻿﻿ # The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -1072,20 +1072,122 @@ label fasc3:
             $ maybe_award_secret_death()
             jump end
 
-label fasc4:
-    show vcfas
-    vc "You have brainwashed the population with propaganda, what do you want them to do?"
+
+    
+
+ label fasc4:
+
+        vc "You have brainwashed the population with propaganda, what do you want them to do?""
+
+
 
     menu:
+
         "let them work more":
-            jump fascwork
-        "build infrastructure":
-            jump fascinfa
-        "increase population":
-            jump fascpop
-        "do nothing":
-            jump fascend
+
+        jump fasc_work
+
+        "build infrastructure"
+
+        jump fasc_infa
+
+        "increase population"
+
+        jump fasc_pop
+
+        "do nothing"
+
+        jump fasc_end
+
     
+
+    label fasc_work:
+
+        vc "You have decided to let the population work more, this will increase the national budget but will also decrease the popularity of the government."
+
+        $ national_budget += 50000000000
+
+        $ popularity -= 10
+
+        jump fasc end
+
+       
+
+
+
+    label fasc_infa:
+
+        vc "You have decided to build infrastructure, this will increase the welfare of the country but will also decrease the national budget."
+
+        $ welfare += 10
+
+        $ national_budget -= 50000000000
+
+        jump fasc end
+
+
+
+    label fasc_pop:
+
+        vc "would you like to force population growth?"
+
+        menu:
+
+            "Approve":
+
+                vc "You have decided to force population growth, this will increase the inhabitants of the country but will also decrease the popularity of the government."
+
+                $ inhabitants += 10000000
+
+                $ popularity -= 10
+
+                jump fasc end
+
+            "Decline":
+
+                vc "You have declined to force population growth this still increases the population but with less impact."
+
+                $ inhabitants += 5000000
+
+                jump fasc end
+
+
+
+    label fasc_end:
+
+        if popularity >= 50:
+
+            $ roll = renpy.random.randint(1, 10)
+
+            if roll <= 4:
+
+                n "you have gained full control of your country and you have been able to win the game"
+
+                jump end
+
+            else:
+
+                n "The population has revolted against you and you have been assassinated, you have lost the game"
+
+                jump_end
+
+
+
+        else:
+
+            $ roll = renpy.random.randint(1, 10)
+
+            if roll <= 1:
+
+                n "you have gained full control of your country and you have been able to win the game"
+
+                jump_end
+
+            else:
+
+                n "The population has revolted against you and you have been assassinated, you have lost the game"
+
+                jump_end
 
 label israel:
     show vccap
