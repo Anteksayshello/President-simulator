@@ -279,7 +279,28 @@ label start:
     # The ai generation is amazing
 
     # These display lines of dialogue.
-    
+
+    play music "audio/Hearts of Iron IV - Axis Theme.mp3"
+    queue music "audio/Hearts of Iron IV - Bring Forth the Tanks.mp3"
+    queue music "audio/Hearts of Iron IV - Comintern Theme.mp3"
+    queue music "audio/Hearts of Iron IV - End of the Tour.mp3"
+    queue music "audio/Hearts of Iron IV - Hearts of Men.mp3"
+    queue music "audio/Hearts of Iron IV - Heavy Water 4.mp3"
+    queue music "audio/Hearts of Iron IV - Krakow.mp3"
+queue music "audio/Hearts of Iron IV - Luftwaffe Strikers Again.mp3"
+queue music "audio/Hearts of Iron IV - Main Theme.mp3"
+queue music "audio/Hearts of Iron IV - Morning of D-day.mp3"
+queue music "audio/Hearts of Iron IV - Mother Russia.mp3"
+queue music "audio/Hearts of Iron IV - Operation Barbarossa 4.mp3"
+queue music "audio/Hearts of Iron IV - Song For the Children of WW2.mp3"
+queue music "audio/Hearts of Iron IV - Soviet Victory.mp3"
+queue music "audio/Hearts of Iron IV - The Great Patriotic War 4.mp3"
+queue music "audio/Hearts of Iron IV - The Might of Soviet Union.mp3"
+queue music "audio/Hearts of Iron IV - The Red Army 4.mp3"
+queue music "audio/Hearts of Iron IV - The Royal Airforce.mp3"
+queue music "audio/Hearts of Iron IV - The War Ends.mp3"
+queue music "audio/Hearts of Iron IV - The Attack.mp3"
+
     n "You have been elected by the people to be the president of listenbourg"
     call screen stats
     n "In the next few years, you will have to make decisions that will affect the country and its people"
@@ -934,9 +955,6 @@ label socgood:
     $ welfare += 10
     vc "You have made the people happy and your economic growth is booming."
     jump end
-    
-
-
 
 label mon:
     hide vccap
@@ -1063,7 +1081,7 @@ label mon_war:
     menu:
         "Approve":
             $ roll = renpy.random.randint(1, 100)
-            if roll <= 1
+            if roll <= 1:
                 vc "You started a war with Andorra and you lost because Andorra had a strong army of 10 soldiers"
                 vc "Andorra annexed Listenbourg and you don't have any more power"
                 jump end
@@ -1071,8 +1089,9 @@ label mon_war:
                 vc "Andorra surrendered to you without a fight and you annexed Andorra."
                 $ inhabitants += 83000
                 $ taxes += 1
-    vc "Would you like to demand Gilbraltar from the UK?"           
-    "Approve":
+    vc "Would you like to demand Gilbraltar from the UK?"
+    menu:          
+        "Approve":
             vc "You have decided to demand Gilbraltar from the UK."
             $ roll = renpy.random.randint(1, 10)
             if roll == 1:
@@ -1192,7 +1211,7 @@ label fasc3:
 
     
 
- label fasc4:
+label fasc4:
 
     vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
@@ -1201,20 +1220,16 @@ label fasc3:
     menu:
 
         "let them work more":
+            jump fasc_work
 
-        jump fasc_work
+        "build infrastructure":
+            jump fasc_infa
 
-        "build infrastructure"
+        "increase population":
+            jump fasc_pop
 
-        jump fasc_infa
-
-        "increase population"
-
-        jump fasc_pop
-
-        "do nothing"
-
-        jump fasc_end
+        "do nothing":
+            jump fasc_end
 
     
 
@@ -1285,7 +1300,7 @@ label fasc3:
 
                 n "The population has revolted against you and you have been assassinated, you have lost the game"
 
-                jump_end
+                jump end
 
 
 
@@ -1297,18 +1312,18 @@ label fasc3:
 
                 n "you have gained full control of your country and you have been able to win the game"
 
-                jump_end
+                jump end
 
             else:
 
                 n "The population has revolted against you and you have been assassinated, you have lost the game"
 
-                jump_end
+                jump end
 
 label imp:
     vc "You have decided to expand into Europe you have to prepare for war"
-      $ power += 20
-      $ national_budget -= 50
+    $ power += 20
+    $ national_budget -= 50
 
     vc "Would you like to trade with Germany to get more resources for the war?"
     menu:
