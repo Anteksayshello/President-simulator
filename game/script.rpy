@@ -21,6 +21,11 @@ default taxes = 20
 default leader = 0
 default militia = 0
 default military = 0
+default royal_army = 0
+default royal_navy = 0
+default Alliance_germany = 0
+default Alliance_steel = 0
+default austria_invasion = 0
 default navy = 0
 default uk = 0
 default dock = 0
@@ -64,6 +69,9 @@ default ach_secret_death_natural = False
 default ach_reclaim_cuba = False
 default ach_the_iberian_company = False
 
+default ach_open_bakery = False
+
+
 init python:
     achievement_defs = {
         "first_decision": "First Decision",
@@ -85,6 +93,7 @@ init python:
         "secret_five_runs": "Seasoned President",
         "secret_every_death": "Grim Archivist",
         "secret_caretaker": "Caring Steward",
+        "open_bakery": "Bakery Owner",
         "reclaim_cuba": "Cuban Reclaimer",
         "the_iberian_company": "The Iberian Company",
     }
@@ -166,6 +175,11 @@ init -2 python:
         "aliances": 0,
         "days": 0,
         "playthroughs": 0,
+        "royal_army": 0,
+        "royal_navy": 0,
+        "Alliance_germany": 0,
+        "Alliance_steel": 0,
+        "austria_invasion": 0,
         "ach_first_decision": False,
         "ach_assassin": False,
         "ach_state_owned_business": False,
@@ -182,6 +196,7 @@ init -2 python:
         "ach_diplomatic_victory": False,
         "ach_merciful_king": False,
         "ach_completionist": False,
+        "ach_open_bakery": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -202,6 +217,7 @@ init -2 python:
             "secret_five_runs": "Seasoned President",
             "secret_every_death": "Grim Archivist",
             "secret_caretaker": "Caring Steward",
+            "open_bakery": "Bakery Owner",
             "reclaim_cuba": "Cuban Reclaimer",
             "the_iberian_company": "The Iberian Company",
         },
@@ -284,6 +300,28 @@ label start:
     # The ai generation is amazing
 
     # These display lines of dialogue.
+
+    play music "audio/Hearts of Iron IV - Axis Theme.mp3"
+    queue music "audio/Hearts of Iron IV - Bring Forth the Tanks.mp3"
+    queue music "audio/Hearts of Iron IV - Comintern Theme.mp3"
+    queue music "audio/Hearts of Iron IV - End of the Tour.mp3"
+    queue music "audio/Hearts of Iron IV - Hearts of Men.mp3"
+    queue music "audio/Hearts of Iron IV - Heavy Water 4.mp3"
+    queue music "audio/Hearts of Iron IV - Krakow.mp3"
+queue music "audio/Hearts of Iron IV - Luftwaffe Strikers Again.mp3"
+queue music "audio/Hearts of Iron IV - Main Theme.mp3"
+queue music "audio/Hearts of Iron IV - Morning of D-day.mp3"
+queue music "audio/Hearts of Iron IV - Mother Russia.mp3"
+queue music "audio/Hearts of Iron IV - Operation Barbarossa 4.mp3"
+queue music "audio/Hearts of Iron IV - Song For the Children of WW2.mp3"
+queue music "audio/Hearts of Iron IV - Soviet Victory.mp3"
+queue music "audio/Hearts of Iron IV - The Great Patriotic War 4.mp3"
+queue music "audio/Hearts of Iron IV - The Might of Soviet Union.mp3"
+queue music "audio/Hearts of Iron IV - The Red Army 4.mp3"
+queue music "audio/Hearts of Iron IV - The Royal Airforce.mp3"
+queue music "audio/Hearts of Iron IV - The War Ends.mp3"
+queue music "audio/Hearts of Iron IV - The Attack.mp3"
+
     scene bg dem
     n "You have been elected by the people to be the president of listenbourg"
     n "Just before you became president, all aliances were disbanded including the UN, EU and Bricks, because of mistrust after a gigantic data leak."
@@ -957,9 +995,6 @@ label socgood:
     $ welfare += 10
     vc "You have made the people happy and your economic growth is booming."
     jump end
-    
-
-
 
 label mon:
     scene bg mon
@@ -983,6 +1018,7 @@ label mon:
             vc "You have decided to legalize incest to keep the power in the family."
             $ welfare -= 20
             $ inhabitants += 2000000
+            $ taxes += 2
         "Decline":
             vc "nothing happens because nothing changes"
     
@@ -1019,11 +1055,112 @@ label mon1:
         "Approve":
             vc "You have become untouchable and you have become a god in the eyes of the people."
             $ award_achievement("monarchy_emperor")
-            jump end
+            
         "Decline":
             vc "You have declined to make the people worship you as a god."
+            
+    vc "Would you like to invest in the royal army?"
+    menu:
+        "Approve":  
+            vc "you continue to start prepaing for war"
+            $ power += 20
+            $ national_budget -= 50
+            $ royal_army = 1
+        "Decline":
+            vc "You have declined to invest in the royal army."
+            $ royal_army = 0    
+
+    vc "Do you want to start a war with Portugal?"
+    menu:
+        "Approve":
+            jump mon_war
+        "Yes":
+            jump mon_war
+label mon_war:
+    show vcmon
+    scene bg mon
+    if royal_army == 1:
+        vc "You started a war with Portugal and you won because of your strong royal army."
+        $ inhabitants += 10400000
+        $ taxes += 7
+    else:
+        $ roll = renpy.random.randint(1, 10)
+        if roll <= 4:
+            vc "you started a war with Portugal and won because of your tactics and the support of the people."
+            $ inhabitants += 10400000
+            $ taxes += 7
+        else:
+            vc "You started a war with Portugal and you lost because your army wasn't good"
+            vc "Portugal annexed Listenbourg and you don't have any more power, you decided to open a bakery and you lived a happy life"
+            $ award_achievement("open_bakery")
             jump end
 
+    vc "would you like to start a war with spain?"
+    menu:
+        "Approve":
+            if royal_army == 1:
+                $ roll = renpy.random.randint(1, 10)
+                if roll <= 7:
+                    vc "You started a war with Spain and you won because of your strong royal army."
+                    $ inhabitants += 47900000
+                    $ taxes += 15
+                else:
+                    vc "You started a war with Spain and you lost because Spain was already prepared for war"
+                    vc "Spain annexed Listenbourg and you don't have any more power"
+                    jump end
+            else:
+                $ roll = renpy.random.randint(1, 10)
+                if roll <= 4:
+                    vc "You started a war with Spain and you won because of your tactics and the support of the people."
+                    $ inhabitants += 47900000
+                    $ taxes += 15
+                else:
+                    vc "You started a war with Spain and you lost because your army wasn't good"
+                    vc "Spain annexed Listenbourg and you don't have any more power,"
+                    jump end
+
+    vc "would you like to annex Andorra?"
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 100)
+            if roll <= 1:
+                vc "You started a war with Andorra and you lost because Andorra had a strong army of 10 soldiers"
+                vc "Andorra annexed Listenbourg and you don't have any more power"
+                jump end
+            else:
+                vc "Andorra surrendered to you without a fight and you annexed Andorra."
+                $ inhabitants += 83000
+                $ taxes += 1
+    vc "Would you like to demand Gilbraltar from the UK?"
+    menu:          
+        "Approve":
+            vc "You have decided to demand Gilbraltar from the UK."
+            $ roll = renpy.random.randint(1, 10)
+            if roll == 1:
+                vc "The Uk has decided to protect Gilbraltar from you, would you like to declare war on the UK?"
+                menu:
+                    "Approve":
+                        vc "You have deicided to declare war on the Uk and it ended up in you losing the war, because of their naval dominance and you have been seized by the SAS."
+                        jump end
+                    
+            else:
+                vc "The UK has decided to concede Gilbraltar to you."
+                $ popularity += 5
+                $ national_budget += 5
+                $ inhabitants += 300000
+                $ welfare += 2
+                $ award_achievement("diplomatic_victory")
+
+    vc "You have successfully reunited the iberian peninsula"
+    $ award_achievement("united_iberia")
+
+    vc "How do you want to expand your empire?"
+    menu:
+        "Expand into europe":
+            jump imp
+        "Build colonies":
+            jump col
+    
 label mon2:
         scene bg mon
         show vcmon
@@ -1175,7 +1312,6 @@ label fasc3:
         vc "would you like to force population growth?"
 
         menu:
-
             "Approve":
 
                 vc "You have decided to force population growth, this will increase the inhabitants of the country but will also decrease the popularity of the government."
@@ -1233,6 +1369,189 @@ label fasc3:
 
                 jump end
 
+label imp:
+    vc "You have decided to expand into Europe you have to prepare for war"
+    $ power += 20
+    $ national_budget -= 50
+
+    vc "Would you like to trade with Germany to get more resources for the war?"
+    menu:
+        "Approve":
+            vc "You have decided to trade with Germany"
+            $ Alliance_steel = 1
+
+        "Decline":
+            vc "You have declined to trade with Germany"
+            $ Alliance_steel = 0
+
+    if Alliance_steel == 1:
+        vc "Would you like to have an alliance with Germany?"
+        menu:
+            "Approve":
+                vc "You have decided to have an alliance with Germany, this will increase the power of the government but will also decrease the popularity of the government."
+                $ alliance_germany = 1
+                jump imp2
+            "Decline":
+                vc "You have declined to have an alliance with Germany."
+                $ alliance_germany = 0
+                jump imp2
+    else:
+        jump imp2
+label imp2:
+    $ ideology = "Imperialism"
+    show vcimp
+    scene bg imp
+    vc "Do you want to start a war with France?"
+    menu:
+        "Approve":
+            if alliance_germany == 1:
+                $ roll = renpy.random.randint(1, 10)
+                if roll <= 8:
+                    vc "You started a war with France and you won because of your alliance with Germany and you could attack from two fronts."
+                    vc "You and germany shared the land of France."
+                    $ inhabitants += 30000000
+                    $ taxes += 20
+                    $ national_budget -= 25
+                else:
+                    vc "You started a war with France and you lost because France was too strong even with your alliance with Germany."
+                    vc "France annexed Listenbourg and you don't have any more power."
+                    jump end
+    vc "Would you like to rebuild the economy of the country after the war?"
+    menu:
+        "Approve":
+            vc "You have decided to rebuild the economy of the country after the war."
+            $ national_budget += 25
+         
+        "Decline":
+            vc "You have declined to rebuild the economy of the country after the war."
+
+    vc "do you want to help Germany to invade Austria?"
+    menu:
+        "Approve":
+            vc "You have decided to help Germany to invade Austria."
+            $ austria_invasion = 1
+        "Decline":
+            vc "You have declined to help Germany to invade Austria."
+            $ austria_invasion = 0
+    vc "Do you want to invade Italy?"
+    menu:
+        "Approve":
+            if austria_invasion == 1:
+                $ roll = renpy.random.randint(1, 10)
+                if roll <= 7:
+                    vc "You started a war with Italy and you won because Germany was able to help you because they border Italy and you could attack from two fronts."
+                    vc "You annexed Italy."
+                    $ inhabitants += 60000000
+                    $ taxes += 15
+                    $ national_budget -= 15
+                else:
+                    vc "You started a war with Italy and you lost because Italy was too strong even with your alliance with Germany."
+                    vc "Italy annexed Listenbourg and you don't have any more power."
+                    jump end
+            else:
+                $ roll = renpy.random.randint(1, 10)
+                if roll <= 4:
+                    vc "You started a war with Italy and you won because of your tactics and the support of the people."
+                    vc "You annexed Italy."
+                    $ inhabitants += 60000000
+                    $ taxes += 15
+                    $ national_budget -= 15
+                else:
+                    vc "You started a war with Italy and you lost because Germany"
+                    vc "Italy annexed Listenbourg and you don't have any more power,"
+                    jump end
+    vc "Do you want to take San Marino?"
+    menu:
+        "Approve":
+            vc "You have decided to take San Marino, this will increase the popularity of the government."
+            $ national_budget -= 1
+            $ inhabitants += 34000
+
+    vc "do you want to invade the balkans?"
+    menu:
+        "Approve": 
+            $ roll = renpy.random.randint(1, 10)
+            if roll <= 7:
+                vc "You started a war with the Balkans and you won because of your strong army."
+                vc "You annexed the Balkans."
+                $ inhabitants += 50000000
+                $ taxes += 10
+                $ national_budget -= 25
+            else:
+                vc "You started a war with the Balkans and you lost because the Balkans were too strong."
+                vc "The Balkans annexed Listenbourg and you don't have any more power,"
+                jump end
+
+    vc "would you like to invest in the air force?"
+    menu:
+        "Approve":
+            vc "You have decided to invest in the air force."
+            $ power += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to invest in the air force."
+    vc "Would you like to invade Türkiye?"
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 10)
+            if roll <= 7:
+                vc "You started a war with Türkiye and you won because of your strong air force."
+                vc "You annexed Türkiye."
+                $ inhabitants += 80000000
+                $ taxes += 25
+                $ national_budget -= 50
+            else:
+                vc "You started a war with Türkiye and you lost because Türkiye was too strong."
+                vc "Türkiye annexed Listenbourg and you don't have any more power,"
+                jump end
+    vc "Would you like to invest in the navy?"
+    menu:
+        "Approve":
+            vc "You have decided to invest in the navy."
+            $ power += 10
+            $ national_budget -= 50
+        "Decline":
+            vc "You have declined to invest in the navy."
+    vc "Do you want to demand the north coast of Africa."
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 10)
+            if roll <= 7:
+                vc "They agreed to your demands because of your strong army."
+                vc "You annexed the north coast of Africa."
+                $ inhabitants += 100000000
+                $ taxes += 5
+            
+            else:
+                vc "You started a war with northern Africa and you lost because the north coast of Africa was too strong."
+                vc "The northern Africa annexed Listenbourg and you don't have any more power,"
+                jump end
+
+    vc "Do you want to connect your territories in Europe and Africa by taking the middle east?"
+    menu:
+        "Approve":
+            $ roll = renpy.random.randint(1, 10)
+            if roll <= 7:
+                vc "You started a war with the middle east and you won because of your strong army."
+                vc "You annexed the middle east."
+                $ inhabitants += 200000000
+                $ taxes += 10
+                $ national_budget -= 25
+            else:
+                vc "You started a war with the middle east and you lost because the middle east was too strong."
+                vc "The middle east annexed Listenbourg and you don't have any more power,"
+                jump end
+    vc "How would you like to name your empire?"
+    menu:
+        "The Imperial Commonwealth of Listenbourg":
+            vc "You have decided to name your empire The Imperial Commonwealth of Listenbourg."
+            vc "You have successfully created an empire that spans across three continents, you are now the most powerful leader in the world."
+            jump end
+        "Imperium Romanum":
+            vc "You have decided to name your empire Imperium Romanum."
+            vc "Your lifelong dream of bringing back the Roman Empire has come true."
+            vc "You have brought back old Roman values and culture."
+            jump end
 label israel:
     show vccap
     scene bg dem
