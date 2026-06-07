@@ -70,20 +70,14 @@ default ach_caretaker_shelters = False
 default ach_caretaker_healthcare = False
 default ach_caretaker_social_security = False
 default ach_caretaker_nutrition = False
-default ach_secret_death_assassination = False
-default ach_secret_death_accident = False
-default ach_secret_death_natural = False
+default ach_secret_death_assassination = True
+default ach_secret_death_accident = True
+default ach_secret_death_natural = True
 default ach_nuclear_program = False
 default ach_war_champion = False
 default ach_resource_exploiter = False
 default ach_military_regime = False
 default ach_peacekeeper = False
-default ach_budget_surplus = False
-default ach_popular_mandate = False
-default ach_iron_fist = False
-default ach_green_future = False
-default ach_global_power = False
-default ach_trade_empire = False
 default ach_reclaim_cuba = False
 default ach_the_iberian_company = False
 
@@ -93,6 +87,7 @@ default ach_open_bakery = False
 init python:
     config.game_menu_action = ShowMenu("stats")
     config.keymap["game_menu"] = ["q"]
+    config.overlay_screens.append("debug_hotkey")
 
     achievement_defs = {
         "first_decision": "First Decision",
@@ -119,12 +114,6 @@ init python:
         "resource_exploiter": "Resource Exploiter",
         "military_regime": "Military Regime",
         "peacekeeper": "Peacekeeper",
-        "budget_surplus": "Budget Surplus",
-        "popular_mandate": "Popular Mandate",
-        "iron_fist": "Iron Fist",
-        "green_future": "Green Future",
-        "global_power": "Global Power",
-        "trade_empire": "Trade Empire",
         "open_bakery": "Bakery Owner",
         "reclaim_cuba": "Cuban Reclaimer",
         "the_iberian_company": "The Iberian Company",
@@ -171,12 +160,6 @@ init python:
                     "resource_exploiter",
                     "military_regime",
                     "peacekeeper",
-                    "budget_surplus",
-                    "popular_mandate",
-                    "iron_fist",
-                    "green_future",
-                    "global_power",
-                    "trade_empire",
                     "reclaim_cuba",
                     "the_iberian_company",
                 ]
@@ -205,19 +188,25 @@ init python:
             ):
                 award_achievement("secret_every_death")
 
-    def maybe_award_progress_achievements():
-        if not getattr(renpy.store, "ach_budget_surplus", False) and renpy.store.national_budget >= 5000:
-            award_achievement("budget_surplus")
-        if not getattr(renpy.store, "ach_popular_mandate", False) and renpy.store.popularity >= 90:
-            award_achievement("popular_mandate")
-        if not getattr(renpy.store, "ach_iron_fist", False) and renpy.store.military >= 75:
-            award_achievement("iron_fist")
-        if not getattr(renpy.store, "ach_green_future", False) and renpy.store.education >= 90:
-            award_achievement("green_future")
-        if not getattr(renpy.store, "ach_global_power", False) and renpy.store.power >= 90:
-            award_achievement("global_power")
-        if not getattr(renpy.store, "ach_trade_empire", False) and renpy.store.aliances >= 5:
-            award_achievement("trade_empire")
+    def set_debug_values():
+        renpy.store.education = 1000
+        renpy.store.national_budget = 100000
+        renpy.store.welfare = 1000
+        renpy.store.inhabitants = 50000000
+        renpy.store.corruption = 0
+        renpy.store.popularity = 1000
+        renpy.store.power = 1000
+        renpy.store.taxes = 500
+        renpy.store.military = 1
+        renpy.store.aliances = 1
+        renpy.store.playthroughs = 5
+        renpy.store.militia = 1
+        renpy.notify("Debug values set to high test values.")
+
+    def unlock_all_achievements():
+        for name in achievement_defs:
+            award_achievement(name)
+        renpy.notify("Debug: all achievements unlocked.")
 
 init -2 python:
     # Fallback defaults for variables that may be missing from older saves or broken state.
@@ -279,23 +268,15 @@ init -2 python:
         "ach_caretaker_healthcare": False,
         "ach_caretaker_social_security": False,
         "ach_caretaker_nutrition": False,
-        "ach_secret_death_assassination": False,
-        "ach_secret_death_accident": False,
-        "ach_secret_death_natural": False,
+        "ach_secret_death_assassination": True,
+        "ach_secret_death_accident": True,
+        "ach_secret_death_natural": True,
         "ach_nuclear_program": False,
         "ach_war_champion": False,
         "ach_resource_exploiter": False,
         "ach_military_regime": False,
         "ach_peacekeeper": False,
-        "ach_budget_surplus": False,
-        "ach_popular_mandate": False,
-        "ach_iron_fist": False,
-        "ach_green_future": False,
-        "ach_global_power": False,
-        "ach_trade_empire": False,
         "ach_open_bakery": False,
-        "ach_reclaim_cuba": False,
-        "ach_the_iberian_company": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -321,12 +302,6 @@ init -2 python:
             "resource_exploiter": "Resource Exploiter",
             "military_regime": "Military Regime",
             "peacekeeper": "Peacekeeper",
-            "budget_surplus": "Budget Surplus",
-            "popular_mandate": "Popular Mandate",
-            "iron_fist": "Iron Fist",
-            "green_future": "Green Future",
-            "global_power": "Global Power",
-            "trade_empire": "Trade Empire",
             "open_bakery": "Bakery Owner",
             "reclaim_cuba": "Cuban Reclaimer",
             "the_iberian_company": "The Iberian Company",
@@ -336,6 +311,50 @@ init -2 python:
     for name, value in defaults.items():
         if not hasattr(renpy.store, name):
             setattr(renpy.store, name, value)
+
+screen debug_hotkey():
+    key "d" action ShowMenu("debug_menu")
+
+screen debug_menu():
+    tag menu
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20)
+        xsize 980
+        ysize 620
+
+        hbox:
+            xfill True
+            spacing 20
+
+            vbox:
+                xsize 420
+                spacing 6
+
+                text "Debug Menu" size 26 xalign 0.5
+                text "Press D at any time to open this menu." size 14 xalign 0.5
+
+                textbutton "Edit all values to high test values" action Function(set_debug_values)
+                textbutton "Unlock all achievements" action Function(unlock_all_achievements)
+                textbutton "Close" action Return()
+
+            vbox:
+                xsize 420
+                spacing 6
+
+                text "Jump to" size 18 xalign 0.5
+                textbutton "Start" action Jump("start")
+                textbutton "Democracy " action Jump("begin")
+                textbutton "Communism " action Jump("com")
+                textbutton "Militarism " action Jump("milr")
+                textbutton "Anarchism " action Jump("arch")
+                textbutton "Socialism " action Jump("soc")
+                textbutton "Monarchy " action Jump("mon")
+                textbutton "Fascism " action Jump("fasc1")
+                textbutton "Colonialismp" action Jump("col")
+                textbutton "Final end screen" action Jump("end")
 
 screen stats():
 
@@ -367,9 +386,6 @@ screen stats():
 screen achievements():
 
     tag menu
-
-    python:
-        maybe_award_progress_achievements()
 
     frame:
         xalign 0.5
@@ -457,19 +473,19 @@ label start:
     queue music "audio/Hearts of Iron IV - Hearts of Men.mp3"
     queue music "audio/Hearts of Iron IV - Heavy Water 4.mp3"
     queue music "audio/Hearts of Iron IV - Krakow.mp3"
-queue music "audio/Hearts of Iron IV - Luftwaffe Strikers Again.mp3"
-queue music "audio/Hearts of Iron IV - Main Theme.mp3"
-queue music "audio/Hearts of Iron IV - Morning of D-day.mp3"
-queue music "audio/Hearts of Iron IV - Mother Russia.mp3"
-queue music "audio/Hearts of Iron IV - Operation Barbarossa 4.mp3"
-queue music "audio/Hearts of Iron IV - Song For the Children of WW2.mp3"
-queue music "audio/Hearts of Iron IV - Soviet Victory.mp3"
-queue music "audio/Hearts of Iron IV - The Great Patriotic War 4.mp3"
-queue music "audio/Hearts of Iron IV - The Might of Soviet Union.mp3"
-queue music "audio/Hearts of Iron IV - The Red Army 4.mp3"
-queue music "audio/Hearts of Iron IV - The Royal Airforce.mp3"
-queue music "audio/Hearts of Iron IV - The War Ends.mp3"
-queue music "audio/Hearts of Iron IV - The Attack.mp3"
+    queue music "audio/Hearts of Iron IV - Luftwaffe Strikers Again.mp3"
+    queue music "audio/Hearts of Iron IV - Main Theme.mp3"
+    queue music "audio/Hearts of Iron IV - Morning of D-day.mp3"
+    queue music "audio/Hearts of Iron IV - Mother Russia.mp3"
+    queue music "audio/Hearts of Iron IV - Operation Barbarossa 4.mp3"
+    queue music "audio/Hearts of Iron IV - Song For the Children of WW2.mp3"
+    queue music "audio/Hearts of Iron IV - Soviet Victory.mp3"
+    queue music "audio/Hearts of Iron IV - The Great Patriotic War 4.mp3"
+    queue music "audio/Hearts of Iron IV - The Might of Soviet Union.mp3"
+    queue music "audio/Hearts of Iron IV - The Red Army 4.mp3"
+    queue music "audio/Hearts of Iron IV - The Royal Airforce.mp3"
+    queue music "audio/Hearts of Iron IV - The War Ends.mp3"
+    queue music "audio/Hearts of Iron IV - The Attack.mp3"
 
     scene bg dem
     n "You have been elected by the people to be the president of listenbourg"
@@ -2594,25 +2610,25 @@ label col_cuba:
                 vc "You have decided to reclaim cuba through a naval invasion, this will increase the power of the government but will also decrease the popularity of the government."
                 $ power += 10
                 $ popularity -= 1
-                    vc "Your naval invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
-                    $ popularity -= 5
-                    $ power -= 5
-                    $ national_budget += 10
-                    $ inhabitants += 9151515
-                    $ welfare += 2
-                    jump col_sla
+                vc "Your naval invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
+                $ popularity -= 5
+                $ power -= 5
+                $ national_budget += 10
+                $ inhabitants += 9151515
+                $ welfare += 2
+                jump col_sla
                             
             "Ground invasion":
                 vc "You have decided to reclaim cuba through a ground invasion, this will increase the power of the government but will also decrease the popularity of the government."
                 $ power += 10
                 $ popularity -= 1
-                    vc "Your ground invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
-                    $ popularity -= 5
-                    $ power -= 5
-                    $ national_budget += 10
-                    $ inhabitants += 9151515
-                    $ welfare += 2
-                    jump col_sla
+                vc "Your ground invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
+                $ popularity -= 5
+                $ power -= 5
+                $ national_budget += 10
+                $ inhabitants += 9151515
+                $ welfare += 2
+                jump col_sla
 
     
 
@@ -2621,7 +2637,7 @@ label col_cuba:
         scene bg col
         show vccol
         vc "You have successfully reclaimed cuba, the people are happy and you have increased your power on the international stage, good job."
-            $ award_achievement("reclaim_cuba")
+        $ award_achievement("reclaim_cuba")
         vc "Would you like to re-introduce slavery?"
         menu:
             "Approve":
@@ -2643,12 +2659,12 @@ label col_cuba:
                 vc "You have declined to exploit your colonies for resources."
         jump col_dec
 
-    label col_dec
+   label col_dec:
         scene bg col
         show vccol
         vc "Where would you like to re-take your past colonies?"
         menu:
-            "Africa:"
+            "Africa:":
                 jump col_africa
             "Asia":
                 jump col_asia
@@ -2840,23 +2856,23 @@ label col_asia:
         menu:
             "Approve":
                 vc "You have decided to demand Indian subjugation."
-                    $ roll = renpy.random.randint(1, 100) roll 
+                $ roll = renpy.random.randint(1, 100)
                     
-                    if roll <= 50
-                        vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
-                        $ welfare += 5
-                        $ population += 145115
-                        $ national_budget += 10
-                        $ asia = 1
-                        jump asia_win
-                    else:
-                        vc "After a costly war against, you came out on top and for your contributions during the war, the UK gave you Sri Lanka."
-                        $ welfare += 5
-                        $ national_budget -= 20
-                        $ population -= 141415
-                        $ asia = 1
-                        jump asia_win
-            "Decline"
+                if roll <= 50:
+                    vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
+                    $ welfare += 5
+                    $ population += 145115                        
+                    $ national_budget += 10
+                    $ asia = 1
+                    jump asia_win
+                else:
+                    vc "After a costly war against, you came out on top and for your contributions during the war, the UK gave you Sri Lanka."
+                    $ welfare += 5
+                    $ national_budget -= 20
+                    $ population -= 141415
+                    $ asia = 1
+                    jump asia_win
+            "Decline":
                 vc "You have declined to demand Indian subjugation."
                 $ asia = 1
                 jump asia_win
@@ -2976,7 +2992,7 @@ label col_americas:
         "Decline":
             vc "You have declined to demand the South of the US, Puerto Rico and the Panama Canal from the US."
             $ americas = 1
-             jump americas_win
+            jump americas_win
 
 
     if americas == 1:
