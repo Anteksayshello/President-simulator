@@ -1544,8 +1544,7 @@ label col_asia:
                         vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
                         $ welfare += 5
                         $ popilation += 145115
-                        $ nationaly budget
-
+                        $ national_budget += 10
                     else:
                         vc "After a costly war"
                         
