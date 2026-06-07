@@ -2659,7 +2659,7 @@ label col_cuba:
                 vc "You have declined to exploit your colonies for resources."
         jump col_dec
 
-   label col_dec:
+    label col_dec:
         scene bg col
         show vccol
         vc "Where would you like to re-take your past colonies?"
