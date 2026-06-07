@@ -1,0 +1,95 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Spellcheck dialogue",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe tmp_spellcheck.py",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Inspect python pkg",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe -m pip show pyspellchecker",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Install pyspellchecker",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe -m pip install pyspellchecker",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Spellcheck dialogue",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe tmp_spellcheck.py",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Fix dialogue typos",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe fix_dialogue.py",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Clean dialogue typos",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe fix_dialogue_again.py",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Final dialogue cleanup",
+			"type": "shell",
+			"command": "C:/Users/Gebruiker/AppData/Local/Programs/Python/Python313/python.exe final_fix_dialogue.py",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Restore script from git",
+			"type": "shell",
+			"command": "git checkout -- game/script.rpy && git status --short game/script.rpy",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Restore script from git",
+			"type": "shell",
+			"command": "git checkout -- game/script.rpy; git status --short game/script.rpy",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Restore script from git",
+			"type": "shell",
+			"command": "cmd /c \"git checkout -- game/script.rpy & git status --short game/script.rpy\"",
+			"args": [],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}

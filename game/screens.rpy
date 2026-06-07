@@ -207,9 +207,13 @@ style input:
 screen choice(items):
     style_prefix "choice"
 
+    key "q" action ShowMenu("stats")
+
     vbox:
         for i in items:
-            textbutton i.caption action i.action
+            $ confirm_action = Confirm("Your national budget is negative. Continue anyway?", [SetVariable("budget_warning_seen", True), Function(record_choice), i.action, Function(reset_budget_warning_if_positive)], [SetVariable("budget_warning_seen", True), NullAction()])
+            $ action = confirm_action if (national_budget < 0 and not budget_warning_seen) else [Function(record_choice), i.action, Function(reset_budget_warning_if_positive)]
+            textbutton i.caption action action
 
 
 style choice_vbox is vbox
@@ -239,6 +243,8 @@ screen quick_menu():
 
     ## Ensure this appears on top of other screens.
     zorder 100
+
+    key "q" action ShowMenu("stats")
 
     if quick_menu:
 
