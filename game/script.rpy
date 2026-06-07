@@ -21,6 +21,13 @@ default taxes = 20
 default leader = 0
 default militia = 0
 default military = 0
+default navy = 0
+default uk = 0
+default dock = 0
+default generals = 0
+default asia = 0
+default africa = 0
+default americas = 0
 
 default days = 0
 default playthroughs = 0
@@ -53,6 +60,8 @@ default ach_caretaker_nutrition = False
 default ach_secret_death_assassination = False
 default ach_secret_death_accident = False
 default ach_secret_death_natural = False
+default ach_reclaim_cuba = False
+default ach_the_iberian_company = False
 
 init python:
     achievement_defs = {
@@ -75,6 +84,8 @@ init python:
         "secret_five_runs": "Seasoned President",
         "secret_every_death": "Grim Archivist",
         "secret_caretaker": "Caring Steward",
+        "reclaim_cuba": "Cuban Reclaimer",
+        "the_iberian_company": "The Iberian Company",
     }
 
     def award_achievement(name):
@@ -103,6 +114,8 @@ init python:
                     "secret_five_runs",
                     "secret_every_death",
                     "secret_caretaker",
+                    "reclaim_cuba",
+                    "the_iberian_company",
                 ]
                 if all(getattr(renpy.store, "ach_" + a, False) for a in completion_achievements):
                     award_achievement("completionist")
@@ -133,6 +146,10 @@ init -2 python:
     # Fallback defaults for variables that may be missing from older saves or broken state.
     # The normal Ren'Py defaults are declared above with the `default` statements.
     defaults = {
+        "navy": 0,
+        "uk": 0,
+        "generals": 0,
+        "dock": 0,
         "education": 60,
         "national_budget": 1000,
         "welfare": 60,
@@ -183,6 +200,8 @@ init -2 python:
             "secret_five_runs": "Seasoned President",
             "secret_every_death": "Grim Archivist",
             "secret_caretaker": "Caring Steward",
+            "reclaim_cuba": "Cuban Reclaimer",
+            "the_iberian_company": "The Iberian Company",
         },
     }
 
@@ -263,8 +282,9 @@ label start:
     # The ai generation is amazing
 
     # These display lines of dialogue.
-    
+    scene bg dem
     n "You have been elected by the people to be the president of listenbourg"
+    n "Just before you became president, all aliances were disbanded including the UN, EU and Bricks, because of mistrust after a gigantic data leak."
     call screen stats
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
@@ -280,6 +300,7 @@ label start:
         jump begin
 
 label begin:
+    scene bg dem
     vc "Would you like to invest in education?"
     show vccap
     menu:
@@ -318,6 +339,7 @@ label begin:
     
 
 label ass:
+    scene bg dem
     show vccap
     vc "Would you like to Assinate people that fight for equal rights?"
     menu:
@@ -330,6 +352,7 @@ label ass:
             vc "You have declined to assinate people that fight for equal rights."
             jump cap
 label cap:  
+    scene bg dem
     show vccap
     vc "Would you like to invest in better housing?"
     menu:
@@ -450,6 +473,7 @@ label cap:
                     jump end
 
 label com:
+    scene bg dem
     show vccap
     vc "Would you like to promote equality?"
 
@@ -485,6 +509,7 @@ label com:
             jump com2
 
 label com2:
+    scene bg dem
     show vccap
     vc "Would you like to give power to the workers?"
     menu:
@@ -494,6 +519,7 @@ label com2:
         "Decline":
             vc "You have declined to give power to the workers."
     hide vccap
+    scene bg com
     show vccom
     $ ideology = "Communism"
     vc "you are now a communist country"
@@ -558,6 +584,7 @@ label com2:
 
 
 label com3:
+    scene bg com
     show vccom
     vc "Would you like to reinstate elections?"
     menu:
@@ -568,6 +595,7 @@ label com3:
             jump co1
 
 label com4:
+    scene bg com
     show vccom
     vc "Would you like to unite the country under one banner?"
     menu:
@@ -612,6 +640,7 @@ label com4:
             vc "You have declined to spread the revolution."
             jump co1
 label co1:
+    scene bg com
     show vccom
     vc "You are about to coup the goverment would you like to proceerd?"
     menu:
@@ -623,6 +652,7 @@ label co1:
             jump com5
 
 label com5:
+    scene bg com
     show vccom
     vc "SIR, YOU FREED THE WORKERS OF PORTUGAL"
     $ inhabitants += 10104552
@@ -722,6 +752,7 @@ label com5:
     
     
 label co2: 
+    scene bg dem
     hide vccom
     show vccap
     $ ideology = "Democracy"
@@ -775,6 +806,7 @@ label co2:
                 vc "there is no military  so you got overthrown, you have lost the game."
                 jump end
 label milr:
+    scene bg mil
     show vcmil
     if militia == 1:
         vc "The militia has saved you from being assinated"
@@ -794,6 +826,7 @@ label milr:
 
 
 label arch:
+    scene bg arc
     show vcarc
     $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
@@ -844,6 +877,7 @@ label arch:
     jump end
 
 label soc:
+    scene bg dem
     show vccap
     vc "More people started working."
     $ national_budget += 50
@@ -859,6 +893,7 @@ label soc:
             vc "You have declined to nationalise the major industries."
     hide vccap
     show vcsoc
+    scene bg soc
     vc "Would you like to introduce a universal healthcare system?"
     menu:
         "Approve": 
@@ -907,11 +942,13 @@ label soc:
             jump socgood
 
 label socshit:
+    scene bg soc
     show vcsoc
     vc "You have made the people happy,but your economic growth has flatlined."
     jump end
 
 label socgood:
+    scene bg soc
     show vcsoc 
     vc "The democrats and the socliast are both happy with your decisions and they have decided to work together to make the country better, this has increased the popularity of the government and the welfare of the country."
     $ popularity += 10
@@ -923,6 +960,7 @@ label socgood:
 
 
 label mon:
+    scene bg mon
     hide vccap
     $ ideology = "Monarchy"
     show vcmon
@@ -967,6 +1005,7 @@ label mon:
             jump mon2
 
 label mon1:
+    scene bg mon
     show vcmon
     vc "You have made good first use of your guillotine by organizing a public execution for the people that refused to follow the religion."
     $ inhabitants -= 1000
@@ -984,6 +1023,7 @@ label mon1:
             jump end
 
 label mon2:
+        scene bg mon
         show vcmon
         vc "The people liked your decision to not force religion on them and they have accepted you as their king."
         $ award_achievement("merciful_king")
@@ -992,6 +1032,7 @@ label mon2:
         vc "You have become a beloved king and you died surrounded by your family and friends."
         jump end
 label fas:
+    scene bg fas
     hide vccap
     $ ideology = "Fascist"
     call screen stats
@@ -1009,6 +1050,7 @@ label fas:
             jump fasc1
 
 label fasc1:
+    scene bg fas
     show vcfas
     n " you have been assassinated by a diffrent power in the government, you have lost the game"
     $ ach_secret_death_assassination = True
@@ -1016,6 +1058,7 @@ label fasc1:
     jump end
 
 label fasc2:
+    scene bg fas
     show vcfas
     vc "Would you like to invest in a secret police?"
 
@@ -1056,6 +1099,7 @@ label fasc2:
             $ maybe_award_secret_death()
             jump end
 label fasc3:
+    scene bg fas
     show vcfas
     vc "Do you want to introduce propaganda in the media?"
 
@@ -1072,36 +1116,30 @@ label fasc3:
             $ maybe_award_secret_death()
             jump end
 
+    label fasc4:
+        scene bg fas
+        show vcfas
 
-    
+        vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
- label fasc4:
+        menu:
+            "let them work more":
+                jump fasc_work
 
-        vc "You have brainwashed the population with propaganda, what do you want them to do?""
+            "build infrastructure":
+                jump fasc_infa
 
+            "increase population":
+                jump fasc_pop
 
-
-    menu:
-
-        "let them work more":
-
-        jump fasc_work
-
-        "build infrastructure"
-
-        jump fasc_infa
-
-        "increase population"
-
-        jump fasc_pop
-
-        "do nothing"
-
-        jump fasc_end
+            "do nothing":
+                jump fasc_end
 
     
 
     label fasc_work:
+        scene bg fas
+        show vcfas
 
         vc "You have decided to let the population work more, this will increase the national budget but will also decrease the popularity of the government."
 
@@ -1109,25 +1147,28 @@ label fasc3:
 
         $ popularity -= 10
 
-        jump fasc end
+        jump fasc_end
 
        
 
 
 
     label fasc_infa:
-
+        scene bg fas
+        show vcfas
         vc "You have decided to build infrastructure, this will increase the welfare of the country but will also decrease the national budget."
 
         $ welfare += 10
 
         $ national_budget -= 50000000000
 
-        jump fasc end
+        jump fasc_end
 
 
 
     label fasc_pop:
+        scene bg fas
+        show vcfas
 
         vc "would you like to force population growth?"
 
@@ -1141,7 +1182,7 @@ label fasc3:
 
                 $ popularity -= 10
 
-                jump fasc end
+                jump fasc_end
 
             "Decline":
 
@@ -1149,12 +1190,13 @@ label fasc3:
 
                 $ inhabitants += 5000000
 
-                jump fasc end
+                jump fasc_end
 
 
 
     label fasc_end:
-
+        scene bg fas
+        show vcfas
         if popularity >= 50:
 
             $ roll = renpy.random.randint(1, 10)
@@ -1169,7 +1211,7 @@ label fasc3:
 
                 n "The population has revolted against you and you have been assassinated, you have lost the game"
 
-                jump_end
+                jump end
 
 
 
@@ -1181,16 +1223,17 @@ label fasc3:
 
                 n "you have gained full control of your country and you have been able to win the game"
 
-                jump_end
+                jump end
 
             else:
 
                 n "The population has revolted against you and you have been assassinated, you have lost the game"
 
-                jump_end
+                jump end
 
 label israel:
     show vccap
+    scene bg dem
     vc "Do you want to give money to Israel?"
     menu:
         "Approve":
@@ -1203,7 +1246,358 @@ label israel:
             $ ach_secret_death_assassination = True
             $ maybe_award_secret_death()
             jump end
+
+label col:
+    $ ideology = "Colonialism"
+    scene bg col
+    show vccol
+    vc "Would you like to invest in your navy?"
+    menu:
+        "Approve":
+            vc "You have decided to invest in your navy, this will increase the power of the government but will also increase the popularity of the government."
+            $ power += 5
+            $ popularity += 5
+            $ national_budget -= 50
+            $ navy == 1
+        "Decline":
+            vc "You have declined to invest in your navy."
+    
+    vc "Would you like start a aliance with Britain to recliam your colonial might"
+    menu:
+        "Approve":
+            vc "You have decided to start a aliance with Britain to reclaim your colonial might."
+            $ power += 10
+            $ popularity -= 10
+            $ national_budget -= 100
+        "Decline":
+            vc "You have declined to start a aliance with Britain to reclaim your colonial might."
+
+    vc "Would you like to invest in British exports?"
+    menu:
+        "Approve":
+            vc "You have decided to invest in British exports."
+            $ national_budget += 100
+        "Decline":
+            vc "You have declined to invest in British exports."
+    
+    vc "Would you like to promote colonialism in your country?"
+    menu:
+        "Approve":
+            vc "You have decided to promote colonialism in your country, this will increase the popularity of the government but will also decrease the welfare of the country."
+            $ popularity += 10
+            $ welfare -= 5
+        "Decline":
+            vc "You have declined to promote colonialism in your country."
+
+    vc "Focus on colonialism during history class?"
+    menu:
+        "Approve":
+            vc "You have decided to focus on colonialism during history class, this will increase the popularity of the government but will also decrease the education of the country."
+            $ popularity += 5
+            $ education -= 5
+        "Decline":
+            vc "You have declined to focus on colonialism during history class."
+    
+    vc "Would you like to justify your colonial ambitions with the history of the Iberian peninsula?"
+    menu:
+        "Approve":
+            vc "You have decided to justify your colonial ambitions with the history of the Iberian peninsula, this will increase the popularity of the government but will also decrease the education of the country."
+            $ popularity += 5
+            $ education -= 5
+        "Decline":
+            vc "You have declined to justify your colonial ambitions with the history of the Iberian peninsula."
+        
+    vc "Would you like to build more dockyards to increase your naval power?"
+    menu:
+        "Approve":
+            vc "You have decided to build more dockyards to increase your naval power, this will increase the power of the government but will also decrease the national budget."
+            $ power += 5
+            $ national_budget -= 50
+            $ dock = 1
+        "Decline":
+            vc "You have declined to build more dockyards to increase your naval power."
+    
+    vc "Would you like to train new generals to increase your military power?"
+    menu:
+        "Approve":
+            vc "You have decided to train new generals to increase your military power, this will increase the power of the government but will also decrease the national budget."
+            $ power += 5
+            $ national_budget -= 50
+            $ generals = 1
+        "Decline":
+            vc "You have declined to train new generals to increase your military power."
+    
+    vc "How would you want to reclaim cuba?"
+    menu:
+        "Diplomacy":
+            vc "You have decided to reclaim cuba through diplomacy, this will increase the popularity of the government."
+            $ popularity += 5
+            $ power -= 5
+            $ roll = renpy.random.randint(1, 10) 
+            if roll >= 3:
+                vc "Your diplomatic efforts have been successful and you have been able to reclaim cuba without any conflict."
+                $ popularity += 5
+                $ national_budget += 50
+                $ inhabitants += 11326616
+                $ welfare += 5
+                $ award_achievement("diplomatic_victory")
+            else:
+                vc "Your diplomatic efforts have failed and you have been humiliated on the international stage"
+                $ popularity -= 5
+                $ power -= 5
+                jump col_cuba
+        "Military":
+            vc "You have decided to reclaim cuba through military"
+            jump col_cuba
+
+label col_cuba:
+    scene bg col
+    show vccol
+    vc "You have decided to reclaim cuba through military, in what way would you like to invade them?"
+    menu:
+        "Naval invasion":
+            vc "You have decided to reclaim cuba through a naval invasion, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 1
+            if navy == 1 or dock == 1:
+                vc "Your naval invasion was successful and you have been able to reclaim cuba without any conflict."
+                $ popularity += 5
+                $ national_budget += 50
+                $ inhabitants += 11326616
+                $ welfare += 5
+                jump col_sla
+                
+            else:
+                vc "Your naval invasion was unsuccessful and you have been humiliated on the international stage"
+                $ popularity -= 5
+                $ power -= 5
+                jump col_cuba2
+        "Ground invasion":
+            vc "You have decided to reclaim cuba through a ground invasion, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 1
+            if generals == 1:
+                vc "Your ground invasion was successful and you have been able to reclaim cuba without any conflict."
+                $ popularity += 5
+                $ national_budget += 50
+                $ inhabitants += 11326616
+                $ welfare += 5
+                jump col_sla
+                
+            else:
+                vc "Your ground invasion was unsuccessful and you have been humiliated on the international stage"
+                $ popularity -= 5
+                $ power -= 5
+                jump col_cuba2
+    label col_cuba2:
+        scene bg col
+        show vccol
+        vc "You first invasion has failed but there is always a second chance, how would you like to invade them?"
+        menu:
+            "Naval invasion":
+                vc "You have decided to reclaim cuba through a naval invasion, this will increase the power of the government but will also decrease the popularity of the government."
+                $ power += 10
+                $ popularity -= 1
+                    vc "Your naval invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
+                    $ popularity -= 5
+                    $ power -= 5
+                    $ national_budget += 10
+                    $ inhabitants += 9151515
+                    $ welfare += 2
+                    jump col_sla
+                            
+            "Ground invasion":
+                vc "You have decided to reclaim cuba through a ground invasion, this will increase the power of the government but will also decrease the popularity of the government."
+                $ power += 10
+                $ popularity -= 1
+                    vc "Your ground invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
+                    $ popularity -= 5
+                    $ power -= 5
+                    $ national_budget += 10
+                    $ inhabitants += 9151515
+                    $ welfare += 2
+                    jump col_sla
+
+    
+
+
+    label col_sla:
+        scene bg col
+        show vccol
+        vc "You have successfully reclaimed cuba, the people are happy and you have increased your power on the international stage, good job."
+            $ award_achievement("reclaim_cuba")
+        vc "Would you like to re-introduce slavery?"
+        menu:
+            "Approve":
+                vc "You have decided to re-introduce slavery, this will increase the national budget but will also decrease the popularity of the government."
+                $ national_budget += 300
+                $ popularity -= 20 
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to re-introduce slavery."
+
+        vc "Would you like to exploit your colonies for resources?"
+        menu:
+            "Approve":
+                vc "You have decided to exploit your colonies for resources, this will increase the national budget but will also decrease the popularity of the government."
+                $ national_budget += 200
+                $ popularity -= 10
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to exploit your colonies for resources."
+        jump col_dec
+
+   label col_dec
+        vc "Where would you like to re-take your past colonies?"
+        menu:
+            "Africa:"
+                jump col_africa
+            "Asia":
+                jump col_asia
+            "Americas":
+                jump col_americas
+
+label col_africa:
+    scene bg col
+    show vccol
+    vc "You have chosen to re-take your colonies in Africa."
+    if africa == 0:
+        vc "Would you like to reclaim Angola?"
+        menu:
+            "Approve":
+                vc "You won the war against Angola and you succesfully reclaimed it."
+                $ popularity += 5
+                $ national_budget -= 10
+                $ inhabitants += 32866272
+                $ welfare += 5
+
+    if africa == 1:
+        label africa_win:
+            scene bg col
+            show vccol
+            vc "You reclaimed your african colonies, would you like reclaim other colonies or did you fullfill your colonial ambitions already?"
+            menu:
+                "Reclaim other colonies":
+                    vc "You have chosen to reclaim other colonies."
+                    jump col_dec
+                "Fullfilled colonial ambitions":
+                    vc "You have fullfilled your colonial ambitions."
+                    jump col_end
+
+label col_asia:
+    scene bg col
+    show vccol
+    if asia == 0:
+        vc "You have chosen to re-take your colonies in Asia."
+        vc "Would you like to reclaim Timor"
+        menu:
+            "Approve":
+                vc "You won the war against the island of Timor and you succesfully reclaimed it."
+                $ popularity += 5
+                $ national_budget -= 10
+                $ inhabitants += 1318442
+                $ welfare += 5
+
+            "Decline":
+                vc "You have declined to reclaim Timor."
+        
+        if uk == 1:
+            vc "Would you like to reclaim Hong Kong for the Uk and Macau for yourself?"
+            menu:
+                "Approve":
+                    vc "The chinese goverment has accepted your demands and they have ceded Hong Kong to the Uk and Macau to you, this will increase the popularity of the government but will also decrease the national budget."
+                    $ popularity += 10
+                    $ national_budget -= 100
+                    $ inhabitants += 6961000
+                    $ welfare += 5
+                "Decline":
+                    vc "You have declined to reclaim Hong Kong for the Uk and Macau for yourself."
+        
+        vc "Would you like to reclaim the Philippines?"
+        menu:
+            "Approve":
+                vc "You won the war against the Philippines and you succesfully reclaimed it."
+                $ popularity += 5
+                $ national_budget -= 10
+                $ inhabitants += 11377239
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to reclaim the Philippines."
+        
+        vc "Would you like to to install puppet goverments in your former colonies in Asia?"
+        menu:
+            "Approve":
+                vc "You have decided to install puppet goverments in your former colonies in Asia, this will increase the national budget."
+                $ national_budget += 100
+                $ popularity += 10
+                $ welfare += 10
+            "Decline":
+                vc "You have declined to install puppet goverments in your former colonies in Asia."
+
+        vc "Would you like to demand India subjugation for your ally?"
+        menu:
+            "Approve":
+                vc "You have decided to demand Indian subjugation."
+                    $ roll = renpy.random.randint(1, 100) roll 
+                    
+                    if roll <= 50
+                        vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
+                        $ welfare += 5
+                        $ popilation += 145115
+                        $ nationaly budget
+
+                    else:
+                        vc "After a costly war"
+                        
+            "Decline"
+                vc "You have declined to demand Indian subjugation."
+                jump asia_win
+                      
+    if asia == 1:
+        jump asia_win
+
+        label asia_win:
+            scene bg col
+            show vccol
+            vc "You reclaimed your asian colonies, would you like reclaim other colonies or did you fullfill your colonial ambitions already?"
+            menu:
+                "Reclaim other colonies":
+                    vc "You have chosen to reclaim other colonies."
+                    jump col_dec
+                "Fullfilled colonial ambitions":
+                    vc "You have fullfilled your colonial ambitions." 
+                    jump col_end
+
+               
+label col_americas:
+    scene bg col
+    show vccol
+    if americas == 0:
+        vc "You have chosen to re-take your colonies in the Americas."
+
+    if americas == 1:
+        jump americas_win
+        label americas_win:  
+            vc "You reclaimed your american colonies, would you like reclaim other colonies or did you fullfill your colonial ambitions already?"
+            menu:
+                "Reclaim other colonies":
+                    vc "You have chosen to reclaim other colonies."
+                    jump col_dec
+                "Fullfilled colonial ambitions":
+                    vc "You have fullfilled your colonial ambitions."
+                    jump col_end
+
+label col_end:
+    scene bg col
+    show vccol
+    vc "You have successfully achieved your colonial ambitions, the people are happy and you have increased your power on the international stage, good job."
+    vc "After a bit your country to rename itself to the Iberian Company and it becomes a global superpower, you have won the game."
+    $ award_achievement("the_iberian_company")
+    jump end
+
 label end:
+    hide vcimp
+    hide vccol
     hide vccap
     hide vccom
     hide vcfas
@@ -1213,7 +1607,7 @@ label end:
     hide vcsoc
     hide vctot
     
-    na "Would you like to play again?"
+    n "Would you like to play again?"
     menu:
         "Yes":
             $ playthroughs += 1
@@ -1230,6 +1624,9 @@ label end:
             $ leader = 0
             $ militia = 0
             $ military = 0
+            $ navy = 0
+            $ dock = 0
+            $ generals = 0
             $ days = 0
             $ popularity = 60
             jump start
