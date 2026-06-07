@@ -1,4 +1,4 @@
-﻿﻿ # The script of the game goes in this file.
+﻿﻿# The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -1176,6 +1176,8 @@ label milr:
             $ popularity -= 10
 
 label milrwar:
+    scene bg mil
+    show vcmil
     vc "You started a war with Portugal"
     vc "How do you want to fight the war?"
     menu:
@@ -1612,6 +1614,7 @@ label milrwar:
     
 
 label milrsat:
+    scene bg mil
     show vcmil
     vc "Do you try to stabilize the country by cracking down on crime and corruption?"
     menu:
@@ -1735,6 +1738,8 @@ label milrsat:
             vc "After a few years of peace, you died of old age, you have won the game."
             $ ach_secret_death_natural = True
             jump end
+    scene bg dem
+    show vccap
     vc "Will you re-instate the parliament to increase the popularity of the government?"
     menu:
         "Approve":
@@ -1818,8 +1823,9 @@ label soc:
         "Decline":
             vc "You have declined to nationalise the major industries."
     hide vccap
-    show vcsoc
     scene bg soc
+    show vcsoc
+    
     vc "Would you like to introduce a universal healthcare system?"
     menu:
         "Approve": 
