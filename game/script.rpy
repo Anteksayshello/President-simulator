@@ -78,6 +78,12 @@ default ach_war_champion = False
 default ach_resource_exploiter = False
 default ach_military_regime = False
 default ach_peacekeeper = False
+default ach_budget_surplus = False
+default ach_popular_mandate = False
+default ach_iron_fist = False
+default ach_green_future = False
+default ach_global_power = False
+default ach_trade_empire = False
 default ach_reclaim_cuba = False
 default ach_the_iberian_company = False
 
@@ -113,6 +119,12 @@ init python:
         "resource_exploiter": "Resource Exploiter",
         "military_regime": "Military Regime",
         "peacekeeper": "Peacekeeper",
+        "budget_surplus": "Budget Surplus",
+        "popular_mandate": "Popular Mandate",
+        "iron_fist": "Iron Fist",
+        "green_future": "Green Future",
+        "global_power": "Global Power",
+        "trade_empire": "Trade Empire",
         "open_bakery": "Bakery Owner",
         "reclaim_cuba": "Cuban Reclaimer",
         "the_iberian_company": "The Iberian Company",
@@ -159,6 +171,12 @@ init python:
                     "resource_exploiter",
                     "military_regime",
                     "peacekeeper",
+                    "budget_surplus",
+                    "popular_mandate",
+                    "iron_fist",
+                    "green_future",
+                    "global_power",
+                    "trade_empire",
                     "reclaim_cuba",
                     "the_iberian_company",
                 ]
@@ -186,6 +204,20 @@ init python:
                 and getattr(renpy.store, "ach_secret_death_natural", False)
             ):
                 award_achievement("secret_every_death")
+
+    def maybe_award_progress_achievements():
+        if not getattr(renpy.store, "ach_budget_surplus", False) and renpy.store.national_budget >= 5000:
+            award_achievement("budget_surplus")
+        if not getattr(renpy.store, "ach_popular_mandate", False) and renpy.store.popularity >= 90:
+            award_achievement("popular_mandate")
+        if not getattr(renpy.store, "ach_iron_fist", False) and renpy.store.military >= 75:
+            award_achievement("iron_fist")
+        if not getattr(renpy.store, "ach_green_future", False) and renpy.store.education >= 90:
+            award_achievement("green_future")
+        if not getattr(renpy.store, "ach_global_power", False) and renpy.store.power >= 90:
+            award_achievement("global_power")
+        if not getattr(renpy.store, "ach_trade_empire", False) and renpy.store.aliances >= 5:
+            award_achievement("trade_empire")
 
 init -2 python:
     # Fallback defaults for variables that may be missing from older saves or broken state.
@@ -255,7 +287,15 @@ init -2 python:
         "ach_resource_exploiter": False,
         "ach_military_regime": False,
         "ach_peacekeeper": False,
+        "ach_budget_surplus": False,
+        "ach_popular_mandate": False,
+        "ach_iron_fist": False,
+        "ach_green_future": False,
+        "ach_global_power": False,
+        "ach_trade_empire": False,
         "ach_open_bakery": False,
+        "ach_reclaim_cuba": False,
+        "ach_the_iberian_company": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -281,6 +321,12 @@ init -2 python:
             "resource_exploiter": "Resource Exploiter",
             "military_regime": "Military Regime",
             "peacekeeper": "Peacekeeper",
+            "budget_surplus": "Budget Surplus",
+            "popular_mandate": "Popular Mandate",
+            "iron_fist": "Iron Fist",
+            "green_future": "Green Future",
+            "global_power": "Global Power",
+            "trade_empire": "Trade Empire",
             "open_bakery": "Bakery Owner",
             "reclaim_cuba": "Cuban Reclaimer",
             "the_iberian_company": "The Iberian Company",
@@ -321,6 +367,9 @@ screen stats():
 screen achievements():
 
     tag menu
+
+    python:
+        maybe_award_progress_achievements()
 
     frame:
         xalign 0.5
