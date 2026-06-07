@@ -28,6 +28,7 @@ default generals = 0
 default asia = 0
 default africa = 0
 default americas = 0
+default aliances = 0
 
 default days = 0
 default playthroughs = 0
@@ -162,6 +163,7 @@ init -2 python:
         "leader": 0,
         "militia": 0,
         "military": 0,
+        "aliances": 0,
         "days": 0,
         "playthroughs": 0,
         "ach_first_decision": False,
@@ -1448,6 +1450,8 @@ label col_cuba:
         jump col_dec
 
    label col_dec
+        scene bg col
+        show vccol
         vc "Where would you like to re-take your past colonies?"
         menu:
             "Africa:"
@@ -1475,9 +1479,105 @@ label col_africa:
         menu:
             "Approve":
                 vc "You invaded South Africa and took al of their land."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 59308690
+                $ welfare += 5
             "Declined":
                 vc "You declined to invade South Africa"
-            
+        vc "Would you like to invade angola?"
+        menu:
+            "Approve":
+                vc "You invaded Angola and took al of their land."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Declined":
+                vc "You declined to invade Angola"
+        vc "Would you like to invade botswana?"
+        menu:
+            "Approve":
+                vc "You invaded Botswana and took al of their land."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Declined":
+                vc "You declined to invade Botswana"
+        vc "Would you like to take back zimbabwe?"
+        menu:
+            "Approve":
+                vc "You reclaimed Zimbabwe."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Declined":
+                vc "You declined to reclaim Zimbabwe."
+        vc "Would you like to stomp on Lesotho and Eswatini?"
+        menu:
+            "Approve":
+                vc "You stomped on Lesotho and Eswatini."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Declined":
+                vc "You declined to stomp on Lesotho and Eswatini."
+        vc "Would you like to exploit their resources?"
+        menu:
+            "Approve":
+                vc "You have decided to exploit your colonies for resources, this will increase the national budget but will also decrease the popularity of the government."
+                $ national_budget += 200
+                $ popularity -= 10
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to exploit your colonies for resources."
+        vc "Would you like to take over Mozambique?"
+        menu:
+            "Approve":
+                vc "You have decided to take over Mozambique."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to take over Mozambique."
+
+        vc "Would you like to take over Zimbabwe?"
+        menu:
+            "Approve":
+                vc "You have decided to take over Zimbabwe."
+                $ popularity += 5
+                $ national_budget -= 20
+                $ inhabitants += 32866272
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to take over Zimbabwe."
+
+        vc "Would you like to build workcamps in your colonies in Africa?"
+        menu:
+            "Approve":
+                vc "You have decided to build workcamps in your colonies in Africa."
+                $ national_budget -= 20
+                $ welfare += 5
+            "Decline":
+                vc "You have declined to build workcamps in your colonies in Africa."
+        
+        vc "Would you like to form the Listunburgian South African colony?"
+        menu:
+            "Approve":
+                vc "You have decided to form the Listunburgian South African colony, this will increase the popularity of the government but will also decrease the national budget."
+                $ popularity += 10
+                $ national_budget -= 50
+                $ inhabitants += 59308690
+                $ welfare += 5
+                $ africa = 1
+            "Decline":
+                vc "You have declined to form the Listunburgian South African colony."
+                $ africa = 1
+                jump africa_win
 
     if africa == 1:
         label africa_win:
@@ -1553,14 +1653,18 @@ label col_asia:
                         $ welfare += 5
                         $ population += 145115
                         $ national_budget += 10
+                        $ asia = 1
+                        jump asia_win
                     else:
                         vc "After a costly war against, you came out on top and for your contributions during the war, the UK gave you Sri Lanka."
                         $ welfare += 5
                         $ national_budget -= 20
                         $ population -= 141415
+                        $ asia = 1
                         jump asia_win
             "Decline"
                 vc "You have declined to demand Indian subjugation."
+                $ asia = 1
                 jump asia_win
                       
     if asia == 1:
@@ -1584,6 +1688,102 @@ label col_americas:
     show vccol
     if americas == 0:
         vc "You have chosen to re-take your colonies in the Americas."
+    
+    vc "Would you like to set up a sphere of influence in the Caribbean?"
+    menu:
+        "Approve":
+            vc "You have decided to set up a sphere of influence in the Caribbean, this will increase the national budget but will also decrease the popularity of the government."
+            $ national_budget += 100
+            $ popularity -= 10
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to set up a sphere of influence in the Caribbean."
+    vc "Would you like to split up central America with the Mexicans?"
+    menu:
+        "Approve":
+            vc "You have decided to split up central America with the Mexicans, this will increase the popularity of the government but will also decrease the national budget."
+            $ popularity += 10
+            $ national_budget -= 50
+            $ inhabitants += 5000000
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to split up central America with the Mexicans."
+    vc "Would you like to back-stab the Mexicans and take all of central America for yourself?"
+    menu:
+        "Approve":
+            vc "You have decided to back-stab the Mexicans and take all of central America for yourself, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 20
+            $ national_budget -= 100
+            $ inhabitants += 5000000
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to back-stab the Mexicans and take all of central America for yourself."
+    vc "Would you like to invade Norther South America?"
+    menu:
+        "Approve":
+            vc "You have decided to invade Northern South America, this will increase the power of the government but will also decrease the popularity of the government."
+            $ power += 10
+            $ popularity -= 20
+            $ national_budget -= 100
+            $ inhabitants += 5000000
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to invade Northern South America."
+    
+    vc "Would you like to invite the rest of hispanic nations into an aliance?"
+    menu:
+        "Approve":
+            vc "You have decided to invite the rest of hispanic nations into an aliance, this will increase the popularity of the government but will also decrease the national budget."
+            $ popularity += 10
+            $ national_budget -= 50
+            $ inhabitants += 5000000
+            $ welfare += 5
+            $ alliances = 1
+        "Decline":
+            vc "You have declined to invite the rest of hispanic nations into an aliance."
+    vc "Would you like to invade the Brazilians?"
+    menu:
+        "Approve":
+            if alliances == 1:
+                vc "You invaded the Brazilians and with the help of your allies you were able to split the land amongst each other."
+                $ popularity += 10
+                $ national_budget -= 50
+                $ inhabitants += 5000000
+                $ welfare += 5
+            else:
+                vc "You invaded the Brazilians but they were too strong and they were able to repel your invasion, you have been humiliated on the international stage."
+                $ popularity -= 10
+                $ power -= 10
+                vc "After a bit your vice-president has staged a coup and taken over the country, because of your incompetence to beat a colony."
+                jump end
+        "Decline":
+            vc "You have declined to invade the Brazilians."
+        
+    vc "Would you like to puppet your aliances in the Americas?"
+    menu:
+        "Approve":
+            vc "You have decided to puppet your aliances in the Americas, this will increase the national budget."
+            $ national_budget += 100
+            $ welfare += 5
+        "Decline":
+            vc "You have declined to puppet your aliances in the Americas."
+    
+    vc "Would you like to demand the South of the US, Pueto Rico and the Panama Canal from the US?"
+    menu:
+        "Approve":
+            vc "The Americans folded, because of your great aliance in South America and they have ceded the South of the US, Puerto Rico and the Panama Canal to you, this will increase the popularity of the government but will also decrease the national budget."
+            $ popularity += 20
+            $ national_budget -= 100
+            $ inhabitants += 5000000
+            $ welfare += 5
+            $ americas = 1
+            jump americas_win
+        "Decline":
+            vc "You have declined to demand the South of the US, Puerto Rico and the Panama Canal from the US."
+            $ americas = 1
+             jump americas_win
+
 
     if americas == 1:
         jump americas_win
@@ -1632,6 +1832,11 @@ label end:
             $ power = 60
             $ taxes = 20
             $ leader = 0
+            $ uk = 0
+            $ alliances = 0
+            $ africa = 0
+            $ asia = 0
+            $ americas = 0
             $ militia = 0
             $ military = 0
             $ navy = 0
