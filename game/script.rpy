@@ -1462,14 +1462,22 @@ label col_africa:
     show vccol
     vc "You have chosen to re-take your colonies in Africa."
     if africa == 0:
-        vc "Would you like to reclaim Angola?"
+        vc "Would you like to reclaim Nambia?"
         menu:
             "Approve":
-                vc "You won the war against Angola and you succesfully reclaimed it."
+                vc "You won the war against Nambia and you succesfully reclaimed it."
                 $ popularity += 5
                 $ national_budget -= 10
                 $ inhabitants += 32866272
                 $ welfare += 5
+    
+        vc "Would you like to take over South Africa"
+        menu:
+            "Approve":
+                vc "You invaded South Africa and took al of their land."
+            "Declined":
+                vc "You declined to invade South Africa"
+            
 
     if africa == 1:
         label africa_win:
@@ -1543,11 +1551,14 @@ label col_asia:
                     if roll <= 50
                         vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
                         $ welfare += 5
-                        $ popilation += 145115
+                        $ population += 145115
                         $ national_budget += 10
                     else:
-                        vc "After a costly war"
-                        
+                        vc "After a costly war against, you came out on top and for your contributions during the war, the UK gave you Sri Lanka."
+                        $ welfare += 5
+                        $ national_budget -= 20
+                        $ population -= 141415
+                        jump asia_win
             "Decline"
                 vc "You have declined to demand Indian subjugation."
                 jump asia_win
