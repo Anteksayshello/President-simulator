@@ -82,6 +82,9 @@ default ach_reclaim_cuba = False
 default ach_the_iberian_company = False
 
 default ach_open_bakery = False
+default ach_tax_relief = False
+default ach_corruption_crusader = False
+default ach_municipal_reformer = False
 
 
 init python:
@@ -110,11 +113,13 @@ init python:
         "secret_every_death": "Grim Archivist",
         "secret_caretaker": "Caring Steward",
         "nuclear_program": "Nuclear Program",
-        "war_champion": "War Champion",
         "resource_exploiter": "Resource Exploiter",
         "military_regime": "Military Regime",
         "peacekeeper": "Peacekeeper",
         "open_bakery": "Bakery Owner",
+        "tax_relief": "Tax Relief",
+        "corruption_crusader": "Corruption Crusader",
+        "municipal_reformer": "Municipal Reformer",
         "reclaim_cuba": "Cuban Reclaimer",
         "the_iberian_company": "The Iberian Company",
     }
@@ -124,6 +129,7 @@ init python:
         if renpy.store.choice_count % 3 == 0:
             renpy.store.national_budget += renpy.store.taxes
             renpy.notify("Every 3 choices: national budget +{} billion".format(renpy.store.taxes))
+
 
     def reset_budget_warning_if_positive():
         if renpy.store.national_budget >= 0:
@@ -160,6 +166,10 @@ init python:
                     "resource_exploiter",
                     "military_regime",
                     "peacekeeper",
+                    "open_bakery",
+                    "tax_relief",
+                    "corruption_crusader",
+                    "municipal_reformer",
                     "reclaim_cuba",
                     "the_iberian_company",
                 ]
@@ -178,6 +188,7 @@ init python:
             ]
             if all(getattr(renpy.store, key, False) for key in keys):
                 award_achievement("secret_caretaker")
+
 
     def maybe_award_secret_death():
         if not getattr(renpy.store, "ach_secret_every_death", False):
@@ -277,6 +288,9 @@ init -2 python:
         "ach_military_regime": False,
         "ach_peacekeeper": False,
         "ach_open_bakery": False,
+        "ach_tax_relief": False,
+        "ach_corruption_crusader": False,
+        "ach_municipal_reformer": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -303,6 +317,9 @@ init -2 python:
             "military_regime": "Military Regime",
             "peacekeeper": "Peacekeeper",
             "open_bakery": "Bakery Owner",
+            "tax_relief": "Tax Relief",
+            "corruption_crusader": "Corruption Crusader",
+            "municipal_reformer": "Municipal Reformer",
             "reclaim_cuba": "Cuban Reclaimer",
             "the_iberian_company": "The Iberian Company",
         },
@@ -313,10 +330,28 @@ init -2 python:
             setattr(renpy.store, name, value)
 
 screen debug_hotkey():
-    key "d" action ShowMenu("debug_menu")
+    key "d" action ShowMenu("debug_prompt")
+
+screen debug_prompt():
+    modal True
+
+    frame:
+        xalign 0.5
+        yalign 0.5
+        padding (20, 20)
+
+        vbox:
+            spacing 10
+
+            text "Enter debug command:" size 24 xalign 0.5
+            input value Variable("debug_command_text") allow "abcdefghijklmnopqrstuvwxyz"
+
+            hbox:
+                spacing 20
+                textbutton "Submit" action If(PythonCondition("debug_command_text.lower() == 'debug'"), [SetVariable("debug_command_text", ""), Hide("debug_prompt"), ShowMenu("debug_menu")], Function(renpy.notify, "Invalid command"))
+                textbutton "Cancel" action [SetVariable("debug_command_text", ""), Hide("debug_prompt")]
 
 screen debug_menu():
-    tag menu
 
     frame:
         xalign 0.5
@@ -338,23 +373,23 @@ screen debug_menu():
 
                 textbutton "Edit all values to high test values" action Function(set_debug_values)
                 textbutton "Unlock all achievements" action Function(unlock_all_achievements)
-                textbutton "Close" action Return()
+                textbutton "Close" action Hide("debug_menu")
 
             vbox:
                 xsize 420
                 spacing 6
 
                 text "Jump to" size 18 xalign 0.5
-                textbutton "Start" action Jump("start")
-                textbutton "Democracy " action Jump("begin")
-                textbutton "Communism " action Jump("com")
-                textbutton "Militarism " action Jump("milr")
-                textbutton "Anarchism " action Jump("arch")
-                textbutton "Socialism " action Jump("soc")
-                textbutton "Monarchy " action Jump("mon")
-                textbutton "Fascism " action Jump("fasc1")
-                textbutton "Colonialismp" action Jump("col")
-                textbutton "Final end screen" action Jump("end")
+                textbutton "Start" action [Hide("debug_menu"), Function(renpy.jump, "start")]
+                textbutton "Democracy " action [Hide("debug_menu"), Function(renpy.jump, "begin")]
+                textbutton "Communism " action [Hide("debug_menu"), Function(renpy.jump, "com")]
+                textbutton "Militarism " action [Hide("debug_menu"), Function(renpy.jump, "milr")]
+                textbutton "Anarchism " action [Hide("debug_menu"), Function(renpy.jump, "arch")]
+                textbutton "Socialism " action [Hide("debug_menu"), Function(renpy.jump, "soc")]
+                textbutton "Monarchy " action [Hide("debug_menu"), Function(renpy.jump, "mon")]
+                textbutton "Fascism " action [Hide("debug_menu"), Function(renpy.jump, "fasc1")]
+                textbutton "Colonialismp" action [Hide("debug_menu"), Function(renpy.jump, "col")]
+                textbutton "Final end screen" action [Hide("debug_menu"), Function(renpy.jump, "end")]
 
 screen stats():
 
@@ -381,7 +416,7 @@ screen stats():
             text "Taxes: [store.taxes] billion" size 20
             text "Playthroughs: [store.playthroughs]" size 20
             textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
-            textbutton "Close stats" action Return() xalign 1.0
+            textbutton "Close stats" action Hide("stats") xalign 1.0
 
 screen achievements():
 
@@ -616,6 +651,7 @@ label cap:
             $ taxes -= 5
             $ national_budget -= 25
             $ popularity += 5
+            $ award_achievement("tax_relief")
         "Decline":
             vc "You have declined to reduce taxes on the poor."
             $ popularity -= 2
@@ -1338,6 +1374,7 @@ label milrwar:
             $ power -= 10
             $ national_budget -= 5
             $ corruption -= 10
+            $ award_achievement("corruption_crusader")
         "Decline":
             vc "You have declined to crack down on corruption in the government"
             $ popularity -= 5
@@ -1447,6 +1484,7 @@ label milrwar:
             $ popularity -= 10
             $ national_budget -= 5
             $ corruption -= 10
+            $ award_achievement("corruption_crusader")
         "Decline":
             vc "You have declined to purge corrupt generals to increase the power of the government and decrease corruption."
             $ popularity += 5
@@ -1678,6 +1716,7 @@ label milrsat:
             $ popularity += 20
             $ power -= 20
             $ national_budget -= 10
+            $ award_achievement("municipal_reformer")
         "Decline":
             vc "You have declined to re-introduce municipalities to increase the popularity of the government and decrease the power of the government."
             $ popularity -= 5
@@ -1762,39 +1801,39 @@ label arch:
     $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
 
-    na "Get rid of the political parties."
+    n "Get rid of the political parties."
     menu:
         "Approve":
-            na "You got rid of political parties."
+            n "You got rid of political parties."
         "Approve":
-            na "You got rid of political parties."
+            n "You got rid of political parties."
     
-    na "Strip the royal family of their power."
+    n "Strip the royal family of their power."
     menu:
         "Approve":
-            na "You strip the royal family of their power."
+            n "You strip the royal family of their power."
         "Approve":
-            na "You strip the royal family of their power."
-    na "Discontinue the state military."
+            n "You strip the royal family of their power."
+    n "Discontinue the state military."
     menu:
         "Approve":
-            na "You discontinue the state military."
+            n "You discontinue the state military."
         "Approve":
-            na "You discontinue the state military."
+            n "You discontinue the state military."
 
-    na "Remove the state owned emergency responders."
+    n "Remove the state owned emergency responders."
     menu:
         "Approve":
-            na "You remove the state owned emergency responders."
+            n "You remove the state owned emergency responders."
         "Approve":
-            na "You remove the state owned emergency responders."
+            n "You remove the state owned emergency responders."
     
-    na "Disband any and all government bodies."
+    n "Disband any and all government bodies."
     menu:
         "Approve":
-            na "You disband any and all government bodies."
+            n "You disband any and all government bodies."
         "Approve":
-            na "You disband any and all government bodies."
+            n "You disband any and all government bodies."
     hide vcarc
 
     n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
