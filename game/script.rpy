@@ -1788,9 +1788,9 @@ label milrsat:
         "Decline":
             vc "You have declined to re-instate the parliament to increase the popularity of the government."
             $ popularity -= 5
-    na "After taking rule of the country during uncertain times you expanded your territory and stabilized the country"
-    na "After that you re-instated elections and became a national hero who will be remembered for generations to come"
-    na "You died of old age, you have won the game."
+    n "After taking rule of the country during uncertain times you expanded your territory and stabilized the country"
+    n "After that you re-instated elections and became a national hero who will be remembered for generations to come"
+    n "You died of old age, you have won the game."
     $ ach_secret_death_natural = True
     jump end
 
@@ -1843,7 +1843,7 @@ label arch:
     $ ach_secret_death_accident = True
     $ maybe_award_secret_death()
 
-    na "The end."
+    n "The end."
     jump end
 
 label soc:
@@ -3065,9 +3065,9 @@ label end:
     hide vcarc
     hide vcsoc
     hide vctot
-    na "Press 'Q' to open the stat screen and see your stats and achievements one final time before the game ends."
+    n "Press 'Q' to open the stat screen and see your stats and achievements one final time before the game ends."
 
-    na "Would you like to play again?"
+    n "Would you like to play again?"
     menu:
         "Yes":
             $ playthroughs += 1
