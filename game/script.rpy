@@ -541,6 +541,7 @@ label start:
 
 label begin:
     scene bg dem
+    show vccap
     vc "Would you like to invest in education?"
     show vccap
     menu:
@@ -2283,6 +2284,8 @@ label fasc3:
                 jump end
 
 label imp:
+    scene bg imp
+    show vcimp
     vc "You have decided to expand into Europe you have to prepare for war"
     $ power += 20
     $ national_budget -= 50
@@ -2312,8 +2315,8 @@ label imp:
         jump imp2
 label imp2:
     $ ideology = "Imperialism"
-    show vcimp
     scene bg imp
+    show vcimp
     vc "Do you want to start a war with France?"
     menu:
         "Approve":
@@ -2338,7 +2341,7 @@ label imp2:
         "Decline":
             vc "You have declined to rebuild the economy of the country after the war."
 
-    vc "do you want to help Germany to invade Austria?"
+    vc "Do you want to help Germany to invade Austria?"
     menu:
         "Approve":
             vc "You have decided to help Germany to invade Austria."
@@ -2370,8 +2373,8 @@ label imp2:
                     $ taxes += 15
                     $ national_budget -= 15
                 else:
-                    vc "You started a war with Italy and you lost because Germany"
-                    vc "Italy annexed Listenbourg and you don't have any more power,"
+                    vc "You started a war with Italy and you lost because Germany doesn't share a border with Italy and it couldn't help you."
+                    vc "Italy annexed Listenbourg and you don't have any more power."
                     jump end
     vc "Do you want to take San Marino?"
     menu:
@@ -2466,8 +2469,8 @@ label imp2:
             vc "You have brought back old Roman values and culture."
             jump end
 label israel:
-    show vccap
     scene bg dem
+    show vccap
     vc "Do you want to give money to Israel?"
     menu:
         "Approve":
@@ -2496,7 +2499,7 @@ label col:
         "Decline":
             vc "You have declined to invest in your navy."
     
-    vc "Would you like start a aliance with Britain to recliam your colonial might"
+    vc "Would you like start a aliance with Britain to recliam your colonial might."
     menu:
         "Approve":
             vc "You have decided to start a aliance with Britain to reclaim your colonial might."
@@ -2575,8 +2578,9 @@ label col:
                 $ inhabitants += 11326616
                 $ welfare += 5
                 $ award_achievement("diplomatic_victory")
+                jump col_sla
             else:
-                vc "Your diplomatic efforts have failed and you have been humiliated on the international stage"
+                vc "Your diplomatic efforts have failed and you have been humiliated on the international stage."
                 $ popularity -= 5
                 $ power -= 5
                 jump col_cuba
@@ -2602,7 +2606,7 @@ label col_cuba:
                 jump col_sla
                 
             else:
-                vc "Your naval invasion was unsuccessful and you have been humiliated on the international stage"
+                vc "Your naval invasion was unsuccessful and you have been humiliated on the international stage."
                 $ popularity -= 5
                 $ power -= 5
                 jump col_cuba2
@@ -2619,7 +2623,7 @@ label col_cuba:
                 jump col_sla
                 
             else:
-                vc "Your ground invasion was unsuccessful and you have been humiliated on the international stage"
+                vc "Your ground invasion was unsuccessful and you have been humiliated on the international stage."
                 $ popularity -= 5
                 $ power -= 5
                 jump col_cuba2
@@ -2632,7 +2636,7 @@ label col_cuba:
                 vc "You have decided to reclaim cuba through a naval invasion, this will increase the power of the government but will also decrease the popularity of the government."
                 $ power += 10
                 $ popularity -= 1
-                vc "Your naval invasion was successful, but you had heavy casualties and you have been humiliated on the international stage"
+                vc "Your naval invasion was successful, but you had heavy casualties and you have been humiliated on the international stage."
                 $ popularity -= 5
                 $ power -= 5
                 $ national_budget += 10
@@ -2736,7 +2740,7 @@ label col_africa:
                 $ inhabitants += 32866272
                 $ welfare += 5
             "Declined":
-                vc "You declined to invade Botswana"
+                vc "You declined to invade Botswana."
         vc "Would you like to take back zimbabwe?"
         menu:
             "Approve":
@@ -3036,6 +3040,44 @@ label col_end:
     vc "After a bit your country to rename itself to the Iberian Company and it becomes a global superpower, you have won the game."
     $ award_achievement("the_iberian_company")
     jump end
+
+label lib_cap: 
+    scene bg cap 
+    show vccap
+    $ ideology = "Capitalist" 
+    vc "Do you want to promote free enterprise?" 
+    menu: 
+        "Approve": 
+            vc "You have decided to promote free enterprise." 
+            $ welfare += 10 
+    "Decline": 
+        vc "You have declined to promote free enterprise." 
+    vc "Would you like to privatize resources?" 
+    menu: 
+        "Approve": 
+            vc "You accepted to privatize resources." 
+            vc "Because of this there's too much Neo-feudal corporatism." 
+            vc "This resulted in you losing the power over Listunbourg." 
+            jump end 
+        "Decline": 
+        vc "You have declined to privatize resources." 
+
+    vc "Would you like to expand consumer markets?" 
+        menu: 
+            "Approve": 
+                vc "You have decided to expand consumer markets." 
+                $ taxes += 5 
+            "Decline": 
+                vc "You declined to expand consumer markets." 
+    vc "Would you like to finacialize?"
+    menu: 
+        "Approve": 
+            vc "You have achieved a social democracy." 
+            jump end 
+        "Decline": 
+            vc "People liked your time as leader but you stepped down as president before the next elections" 
+            jump end
+
 
 label end:
     hide vcimp
