@@ -1,12 +1,11 @@
-﻿﻿# The script of the game goes in this file.
+﻿# The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-
+define n = Character("Narrator")
 define p = Character("President")
 define vc = Character("Vice President")
-define n = Character("Narrator")
 
 default education = 60
 default national_budget = 1000
@@ -493,6 +492,7 @@ label start:
     call screen stats
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
+    n "When you press on q, you can view your stats and achievements"
     
     show vccap
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
@@ -616,6 +616,7 @@ label cap:
             $ taxes -= 5
             $ national_budget -= 25
             $ popularity += 5
+            jump dem1
         "Decline":
             vc "You have declined to reduce taxes on the poor."
             $ popularity -= 2
@@ -641,41 +642,45 @@ label cap:
                 "Decline":
                     vc "You listened to the angry citizens and apologized for not reducing taxes on the poor, this has increase the popularity of the government."
                     $ popularity += 2
-                    vc "Invest in better healthcare"
-                    menu:
-                        "Approve":
-                            vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
-                            $ welfare += 3
-                            $ national_budget -= 100
-                            $ ach_caretaker_healthcare = True
-                            $ maybe_award_caretaker()
-                        "Decline":
-                            vc "You have declined to invest in better healthcare."
-                            $ popularity -= 2
-                    vc "Invest in better social security"
-                    menu:
-                        "Approve":
-                            vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
-                            $ welfare += 3
-                            $ national_budget -= 75
-                            $ ach_caretaker_social_security = True
-                            $ maybe_award_caretaker()
-                        "Decline":
-                            vc "You have declined to invest in better social security."
-                            $ popularity -= 2
-                    vc "Invest in better nutrition for the poor"
-                    menu:
-                        "Approve":
-                            vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
-                            $ welfare += 3
-                            $ national_budget -= 50
-                            $ ach_caretaker_nutrition = True
-                            $ maybe_award_caretaker()
-                        "Decline":
-                            vc "You have declined to invest in better nutrition for the poor."
-                            $ popularity -= 2
-                    vc "You got outvoted and you have to resign, you have lost the game."
-                    jump end
+                    jump dem1
+    label dem1:
+        scene bg dem
+        show vccap
+        vc "Invest in better healthcare"
+        menu:
+            "Approve":
+                vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
+                $ welfare += 3
+                $ national_budget -= 100
+                $ ach_caretaker_healthcare = True
+                $ maybe_award_caretaker()
+            "Decline":
+                vc "You have declined to invest in better healthcare."
+                $ popularity -= 2
+        vc "Invest in better social security"
+        menu:
+            "Approve":
+                vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
+                $ welfare += 3
+                $ national_budget -= 75
+                $ ach_caretaker_social_security = True
+                $ maybe_award_caretaker()
+            "Decline":
+                vc "You have declined to invest in better social security."
+                $ popularity -= 2
+        vc "Invest in better nutrition for the poor"
+        menu:
+            "Approve":
+                vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
+                $ welfare += 3
+                $ national_budget -= 50
+                $ ach_caretaker_nutrition = True
+                $ maybe_award_caretaker()
+            "Decline":
+                vc "You have declined to invest in better nutrition for the poor."
+                $ popularity -= 2
+        vc "You got outvoted and you have to resign, you have lost the game."
+        jump end
 
 label com:
     scene bg dem
@@ -732,9 +737,9 @@ label com2:
     vc "Would you like to make the media state-owned?"
     menu:
         "Approve":
-            vc "You have decided to make the media state-owned, this will increase the popularity of the government but will also decrease the power of the government."
+            vc "You have decided to make the media state-owned, this will increase the popularity of the government but will also increase the power of the government."
             $ popularity += 10
-            $ power -= 10
+            $ power += 10
             $ national_budget -= 3
 
         "Decline":
@@ -743,9 +748,9 @@ label com2:
     vc "Would you like to promote a one leader mentality?"
     menu:
         "Approve":
-            vc "You have decided to promote a one leader mentality, this will increase the power of the government but will also decrease the popularity of the government."
+            vc "You have decided to promote a one leader mentality, this will increase the power of the government and will also increase the popularity of the government."
             $ power += 20
-            $ popularity -= 20
+            $ popularity += 10
             $ leader = 1
             $ national_budget -= 0.5
         "Decline":
@@ -785,19 +790,10 @@ label com2:
             jump com4 
         "Decline":
             vc "You have declined to unite a national council."
-            jump com3
-
-
-label com3:
-    scene bg com
-    show vccom
-    vc "Would you like to reinstate elections?"
-    menu:
-        "Approve":
-            vc "You have decided to reinstate elections."
-            $ power -= 20
-            $ popularity += 10
             jump co1
+
+
+
 
 label com4:
     scene bg com
@@ -837,7 +833,7 @@ label com4:
     vc "Would you like to SPREAD THE REVOLUTION?"
     menu:
         "Approve":
-            vc "You have decided to spread the revolution, this will increase the popularity of the government but will also decrease the power of the government."
+            vc "You have decided to spread the revolution, this will increase the popularity of the government and will also increase the power of the government."
             $ popularity += 5
             $ power += 5
             jump com5
@@ -1111,7 +1107,7 @@ label milr:
             $ power += 20
             $ popularity -= 5
             $ national_budget += 25
-            $ population += 1000000
+            $ inhabitants += 1000000
             $ taxes += 5
         "Decline":
             vc "You have declined to import cheap labor from China to increase your power and save money."
@@ -1130,16 +1126,16 @@ label milr:
         vc "Where do you do your first nuclear test?"
         menu:
             "In the desert":
-                vc "You have decided to do your first nuclear test in the desert this increased the popularity of the government but also damaged the environment"
+                vc "You have decided to do your first nuclear test in the desert this increased the popularity of the government but also damaged the environment."
                 $ popularity += 5
                 $ national_budget -= 10
                 $ award_achievement("nuclear_program")
             "In the ocean":
-                vc "You have decided to do your first nuclear test in the ocean this caused a radioactive raincloud to travel over your country and damaged the environment, this decreased the popularity of the government(shocking)"  
+                vc "You have decided to do your first nuclear test in the ocean this caused a radioactive raincloud to travel over your country and damaged the environment, this decreased the popularity of the government(shocking)."  
                 $ popularity -= 15
                 $ national_budget -= 10
-            "on portugees soil":
-                vc "You have decided to do your first nuclear test on Portuguese soil, this caused Portugal to attack you and start a war"
+            "On portugees soil":
+                vc "You have decided to do your first nuclear test on Portuguese soil, this caused Portugal to attack you and start a war."
                 jump milrwar
     vc "Do you want to start equipment production to increase your power and popularity?"
     menu:
@@ -1200,19 +1196,19 @@ label milrwar:
                     $ warwinchance += 20
                     $ popularity += 5
                     $ power -= 10
-                    $ National_budget -= 20
+                    $ national_budget -= 20
                 "Use a siege strategy to slowly wear down their defenses and capture their capital":
                     vc "You have decided to use a siege strategy to slowly wear down their defenses and capture their capital, this will decrease the popularity of the government but also increase the power of the government."
                     $ warwinchance += 15
                     $ popularity -= 5
                     $ power += 10
-                    $ National_budget -= 25    
+                    $ national_budget -= 25    
                 "Use a guerrilla strategy to harass their forces and capture their capital":
                     vc "You have decided to use a guerrilla strategy to harass their forces and capture their capital, this will decrease the popularity of the government but also increase the power of the government."
                     $ warwinchance += 10
                     $ popularity -= 10
                     $ power += 15
-                    $ National_budget -= 30
+                    $ national_budget -= 30
     $ roll = renpy.random.randint(1, 100)
     if roll <= warwinchance:
         vc "You have won the war against Portugal, this will increase the popularity of the government and give you access to their resources."
@@ -1229,7 +1225,7 @@ label milrwar:
         $ welfare -= 5
         $ ach_secret_death_assassination = True
         jump end
-    vc " do you want to annex Portugal or make it a puppet state?"
+    vc " Do you want to annex Portugal or make it a puppet state?"
     menu:
         "Annex portugal":
             vc "You have decided to annex Portugal, this will increase the popularity of the government but will also decrease the national budget."
@@ -1299,7 +1295,7 @@ label milrwar:
 
 
 
-    vc " do you want to invest in avionics?"
+    vc " Do you want to invest in avionics?"
     menu:
         "Approve":
             vc "You have decided to invest in avionics, this will increase the power of the government but will also decrease the popularity of the government."
@@ -1330,7 +1326,7 @@ label milrwar:
         "Decline":
             vc "You have declined to exploit the resources of Portugal to increase  the popularity of the government."
             $ popularity += 5
-    vc " do you want to crack down on corruption in the government to increase the popularity of the government?"
+    vc " Do you want to crack down on corruption in the government to increase the popularity of the government?"
     menu:
         "Approve":
             vc "You have decided to crack down on corruption in the government to increase the popularity of the government, this will increase the popularity of the government but will also decrease the power of the government."
@@ -1339,7 +1335,7 @@ label milrwar:
             $ national_budget -= 5
             $ corruption -= 10
         "Decline":
-            vc "You have declined to crack down on corruption in the government"
+            vc "You have declined to crack down on corruption in the government."
             $ popularity -= 5
     vc "Do you establish a corridor to France?"
     menu:
@@ -1355,14 +1351,14 @@ label milrwar:
             jump end
     vc "What do you want to do?"
     menu:
-        "demand the subjugation of spain":
+        "Demand the subjugation of spain":
             $ roll = renpy.random.randint(1, 100)
             if roll <= 80:
                 vc "They said yes and they are now your puppet state, this will increase the power of the government but will also decrease the popularity of the government."
                 $ power += 20
                 $ popularity -= 10
                 $ national_budget -= 50
-                vc "You are happy with what land you got and became peaceful"
+                vc "You are happy with what land you got and became peaceful."
                 vc "After a few years of peace, you died of old age, after you died the country started to demilitarize, you have won the game."
                 jump end
             else:
@@ -1377,7 +1373,7 @@ label milrwar:
                 vc "You got the entirety of spain as annexed territory, this will increase the power of the government but will also decrease the popularity of the government."
                 $ power += 30
                 $ popularity -= 30
-        "go to war with spain":
+        "Go to war with spain":
             vc "They said no and they declared war on you, this will decrease the popularity of the government but will also increase the power of the government."
             $ popularity -= 20
             $ power += 10
@@ -1419,7 +1415,7 @@ label milrwar:
         "Decline":
             vc "You have declined to establish a modern air force to increase the power of the government."
             $ popularity += 5
-    vc " do you want to increase conscription to a mandatory military service to increase your power and save money?"
+    vc " Do you want to increase conscription to a mandatory military service to increase your power and save money?"
     menu:
         "Approve":
             vc "You have decided to increase conscription to a mandatory military service to increase your power and save money, this will increase the power of the government but will also decrease the popularity of the government."
@@ -1509,7 +1505,7 @@ label milrwar:
             $ popularity -= 10
             $ national_budget += 50
             $ taxes += 20
-        "take the south of france as annexed territory and make the north a puppet state":
+        "Take the south of france as annexed territory and make the north a puppet state":
             vc "You have decided to take the south of France as annexed territory and make the north a puppet state, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 20
             $ popularity -= 20
@@ -1577,19 +1573,19 @@ label milrwar:
                     $ national_budget -= 50
     vc "What do you want to do now?"
     menu:
-        "take morocco as a puppet state to increase the power of the government and gain money":
+        "Take morocco as a puppet state to increase the power of the government and gain money":
             vc "You have decided to take Morocco as a puppet state to increase the power of the government and gain money, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 20
             $ popularity -= 10
             $ national_budget += 50
             $ taxes += 10
-        "demand the subjugation of morocco to increase the power of the government and gain money":
+        "Demand the subjugation of morocco to increase the power of the government and gain money":
             vc "You have decided to demand the subjugation of Morocco to increase the power of the government and gain money, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 20
             $ popularity -= 10
             $ national_budget += 50
             $ taxes += 10
-        "demand the annexation of morocco to increase the power of the government and gain money":
+        "Demand the annexation of morocco to increase the power of the government and gain money":
             vc "You have decided to demand the annexation of Morocco to increase the power of the government and gain money, this will increase the power of the government but will also decrease the popularity of the government."
             $ power += 30
             $ popularity -= 20
@@ -1600,13 +1596,13 @@ label milrwar:
         "Approve":
             vc "You have decided to try and seize Monaco to increase the power of the government and gain money, this will increase the power of the government but will also decrease the popularity of the government."
             vc "You have successfully seized Monaco, however the rich people living there worked together to assassinate you"
-            vc "But you survived the asSASsination attempt"
+            vc "But you survived the assassination attempt"
             vc "Sadly only days later you got hit by a drunk driver and died, you have lost the game."
             $ ach_secret_death_accident = True
             jump end
         "Decline":
             vc "You have declined to try and seize Monaco to increase the power of the government and gain money."
-            vc "They thank you by inviting you to a fancy dinner and they try to assassinate you there but you survive the asSASsination attempt and flee the country to avoid another asSASsination attempt."
+            vc "They thank you by inviting you to a fancy dinner and they try to assassinate you there but you survive the assassination attempt and flee the country to avoid another assassination attempt."
             vc "After a few years of hiding, you died of old age, you have won the game."
             $ ach_secret_death_natural = True
             jump end
@@ -1649,7 +1645,7 @@ label milrsat:
             "Decline":
                 vc "You have declined to destroy the workcamps in Portugal to increase the popularity of the government and decrease the power of the government."
                 $ popularity -= 5
-    if curfews == 1:
+    if curfew == 1:
         vc "Do you want to lift the curfews in Portugal to increase the popularity of the government and decrease the power of the government?"
         menu:
             "Approve":
@@ -1724,20 +1720,7 @@ label milrsat:
         "Decline":
             vc "You have declined to build nuclear reactors to have a cleaner energy source and increase the power of the government."
             $ popularity += 5
-    vc "Will you re-instate elections to increase the popularity of the government?"
-    menu:
-        "Approve":
-            vc "You have decided to re-instate elections to increase the popularity of the government, this will increase the popularity of the government."
-            $ popularity += 20
-            $ national_budget -= 10
-            $ award_achievement("peacekeeper")
-        "Decline":
-            vc "You have declined to re-instate elections to increase the popularity of the government."
-            $ popularity -= 5
-            vc "You stabilized the country and made the people happy, however you kept ruling with an iron fist"
-            vc "After a few years of peace, you died of old age, you have won the game."
-            $ ach_secret_death_natural = True
-            jump end
+
     scene bg dem
     show vccap
     vc "Will you re-instate the parliament to increase the popularity of the government?"
@@ -1749,9 +1732,9 @@ label milrsat:
         "Decline":
             vc "You have declined to re-instate the parliament to increase the popularity of the government."
             $ popularity -= 5
-    na "After taking rule of the country during uncertain times you expanded your territory and stabilized the country"
-    na "After that you re-instated elections and became a national hero who will be remembered for generations to come"
-    na "You died of old age, you have won the game."
+    n "After taking rule of the country during uncertain times you expanded your territory and stabilized the country."
+    n "After that you re-instated elections and became a national hero who will be remembered for generations to come."
+    n "You died of old age, you have won the game."
     $ ach_secret_death_natural = True
     jump end
 
@@ -1762,39 +1745,39 @@ label arch:
     $ ideology = "Anarchist"
     vc "You are now an Anarchist, you have given all the power to the people and you have no more power, you can only watch as the country develops without you, good luck."
 
-    na "Get rid of the political parties."
+    n "Get rid of the political parties."
     menu:
         "Approve":
-            na "You got rid of political parties."
+            n "You got rid of political parties."
         "Approve":
-            na "You got rid of political parties."
+            n "You got rid of political parties."
     
-    na "Strip the royal family of their power."
+    n "Strip the royal family of their power."
     menu:
         "Approve":
-            na "You strip the royal family of their power."
+            n "You strip the royal family of their power."
         "Approve":
-            na "You strip the royal family of their power."
-    na "Discontinue the state military."
+            n "You strip the royal family of their power."
+    n "Discontinue the state military."
     menu:
         "Approve":
-            na "You discontinue the state military."
+            n "You discontinue the state military."
         "Approve":
-            na "You discontinue the state military."
+            n "You discontinue the state military."
 
-    na "Remove the state owned emergency responders."
+    n "Remove the state owned emergency responders."
     menu:
         "Approve":
-            na "You remove the state owned emergency responders."
+            n "You remove the state owned emergency responders."
         "Approve":
-            na "You remove the state owned emergency responders."
+            n "You remove the state owned emergency responders."
     
-    na "Disband any and all government bodies."
+    n "Disband any and all government bodies."
     menu:
         "Approve":
-            na "You disband any and all government bodies."
+            n "You disband any and all government bodies."
         "Approve":
-            na "You disband any and all government bodies."
+            n "You disband any and all government bodies."
     hide vcarc
 
     n "You achieved total Anarchy, the people are now in control of the country and you have no more power, good luck."
@@ -1804,7 +1787,7 @@ label arch:
     $ ach_secret_death_accident = True
     $ maybe_award_secret_death()
 
-    na "The end."
+    n "The end."
     jump end
 
 label soc:
@@ -1982,8 +1965,8 @@ label mon_war:
             $ inhabitants += 10400000
             $ taxes += 7
         else:
-            vc "You started a war with Portugal and you lost because your army wasn't good"
-            vc "Portugal annexed Listenbourg and you don't have any more power, you decided to open a bakery and you lived a happy life"
+            vc "You started a war with Portugal and you lost because your army wasn't good."
+            vc "Portugal annexed Listenbourg and you don't have any more power, you decided to open a bakery and you lived a happy life."
             $ award_achievement("open_bakery")
             jump end
 
@@ -1997,8 +1980,8 @@ label mon_war:
                     $ inhabitants += 47900000
                     $ taxes += 15
                 else:
-                    vc "You started a war with Spain and you lost because Spain was already prepared for war"
-                    vc "Spain annexed Listenbourg and you don't have any more power"
+                    vc "You started a war with Spain and you lost because Spain was already prepared for war."
+                    vc "Spain annexed Listenbourg and you don't have any more power."
                     jump end
             else:
                 $ roll = renpy.random.randint(1, 10)
@@ -2007,8 +1990,8 @@ label mon_war:
                     $ inhabitants += 47900000
                     $ taxes += 15
                 else:
-                    vc "You started a war with Spain and you lost because your army wasn't good"
-                    vc "Spain annexed Listenbourg and you don't have any more power,"
+                    vc "You started a war with Spain and you lost because your army wasn't good."
+                    vc "Spain annexed Listenbourg and you don't have any more power."
                     jump end
 
     vc "would you like to annex Andorra?"
@@ -2016,8 +1999,8 @@ label mon_war:
         "Approve":
             $ roll = renpy.random.randint(1, 100)
             if roll <= 1:
-                vc "You started a war with Andorra and you lost because Andorra had a strong army of 10 soldiers"
-                vc "Andorra annexed Listenbourg and you don't have any more power"
+                vc "You started a war with Andorra and you lost because Andorra had a strong army of 10 soldiers."
+                vc "Andorra annexed Listenbourg and you don't have any more power."
                 jump end
             else:
                 vc "Andorra surrendered to you without a fight and you annexed Andorra."
@@ -2083,7 +2066,7 @@ label fas:
 label fasc1:
     scene bg fas
     show vcfas
-    n " you have been asSASSASSASsinated by a different power in the government, you have lost the game"
+    n " you have been asSASSASSASsinated by a different power in the government, you have lost the game."
     $ ach_secret_death_assassination = True
     $ maybe_award_secret_death()
     jump end
@@ -2142,7 +2125,7 @@ label fasc3:
             jump fasc4
         "Decline":
             vc "You have declined to introduce propaganda in the media."
-            n "The media has been able to criticize you and you have been asSASSASSASsinated, you have lost the game"
+            n "The media has been able to criticize you and you have been assassinated, you have lost the game."
             $ ach_secret_death_assassination = True
             $ maybe_award_secret_death()
             jump end
@@ -2154,16 +2137,16 @@ label fasc3:
         vc "You have brainwashed the population with propaganda, what do you want them to do?"
 
         menu:
-            "let them work more":
+            "Let them work more":
                 jump fasc_work
 
-            "build infrastructure":
+            "Build infrastructure":
                 jump fasc_infa
 
-            "increase population":
+            "Increase population":
                 jump fasc_pop
 
-            "do nothing":
+            "Do nothing":
                 jump fasc_end
 
     
@@ -2230,7 +2213,7 @@ label fasc3:
 
             $ roll = renpy.random.randint(1, 10)
 
-            if roll <= 4:
+            if roll <= 7:
 
                 n "You have gained full control of your country and you have been able to win the game"
 
@@ -2238,7 +2221,7 @@ label fasc3:
 
             else:
 
-                n "The population has revolted against you and you have been asSASSASSASsinated, you have lost the game"
+                n "The population has revolted against you and you have been assassinated, you have lost the game"
 
                 jump end
 
@@ -2256,7 +2239,7 @@ label fasc3:
 
             else:
 
-                n "The population has revolted against you and you have been asSASSASSASsinated, you have lost the game"
+                n "The population has revolted against you and you have been assassinated, you have lost the game"
 
                 jump end
 
@@ -2861,7 +2844,7 @@ label col_asia:
                 if roll <= 50:
                     vc "The Indian goverment has submitted to yor demands and the UK has given Sri Lanka for your troubles."
                     $ welfare += 5
-                    $ population += 145115                        
+                    $ inhabitants += 145115                        
                     $ national_budget += 10
                     $ asia = 1
                     jump asia_win
@@ -2869,7 +2852,7 @@ label col_asia:
                     vc "After a costly war against, you came out on top and for your contributions during the war, the UK gave you Sri Lanka."
                     $ welfare += 5
                     $ national_budget -= 20
-                    $ population -= 141415
+                    $ inhabitants -= 141415
                     $ asia = 1
                     jump asia_win
             "Decline":
@@ -3026,9 +3009,9 @@ label end:
     hide vcarc
     hide vcsoc
     hide vctot
-    na "Press 'Q' to open the stat screen and see your stats and achievements one final time before the game ends."
+    n "Press 'Q' to open the stat screen and see your stats and achievements one final time before the game ends."
 
-    na "Would you like to play again?"
+    n "Would you like to play again?"
     menu:
         "Yes":
             $ playthroughs += 1
