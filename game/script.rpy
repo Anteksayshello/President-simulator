@@ -85,6 +85,10 @@ default ach_open_bakery = False
 default ach_tax_relief = False
 default ach_corruption_crusader = False
 default ach_municipal_reformer = False
+default ach_power_over_200 = False
+default ach_popularity_below_minus_75 = False
+default ach_budget_crisis = False
+default achievement_hint = ""
 
 
 init python:
@@ -116,6 +120,9 @@ init python:
         "nuclear_program": "Nuclear Program",
         "resource_exploiter": "Resource Exploiter",
         "military_regime": "Military Regime",
+        "power_over_200": "Power Over 200",
+        "popularity_below_minus_75": "Unpopular Leader",
+        "budget_crisis": "Budget Crisis",
         "peacekeeper": "Peacekeeper",
         "open_bakery": "Bakery Owner",
         "tax_relief": "Tax Relief",
@@ -125,11 +132,45 @@ init python:
         "the_iberian_company": "The Iberian Company",
     }
 
+    # Human-friendly hints for non-secret achievements. Secret achievements
+    # are intentionally not included here so they remain hidden.
+    achievement_hints = {
+        "first_decision": "Make your first decision in the game.",
+        "assassin": "Choose to assassinate political opponents.",
+        "state_owned_business": "Make a major business state-owned.",
+        "rich_taxation": "Increase taxes on the rich.",
+        "united_iberia": "Unify the Iberian peninsula.",
+        "democratic_return": "Re-introduce elections and parliament.",
+        "anarchist_vision": "Give power to the people and reach anarchy.",
+        "monarchy_emperor": "Become an emperor in the Monarchy path.",
+        "victory_spain": "Win the war against Spain.",
+        "people_reformer": "Invest in housing and welfare reforms.",
+        "welfare_state": "Use funds to improve shelters and transport.",
+        "militarist": "Expand the military during the Communist path.",
+        "diplomatic_victory": "Negotiate Gibraltar or similar concessions.",
+        "merciful_king": "Choose mercy as a monarch and avoid executions.",
+        "nuclear_program": "Start a nuclear program and test a device.",
+        "war_champion": "Win a major war (e.g. Portugal/Spain).",
+        "resource_exploiter": "Exploit another country's resources.",
+        "military_regime": "Keep power with military support.",
+        "peacekeeper": "Take actions that stabilise peace.",
+        "open_bakery": "Lose power peacefully and open a bakery.",
+        "tax_relief": "Cut taxes for the poor (reduce taxes option).",
+        "corruption_crusader": "Crack down on corruption and purge generals.",
+        "municipal_reformer": "Re-introduce municipalities.",
+        "reclaim_cuba": "(Game-specific) reclaim operations for Cuba.",
+        "the_iberian_company": "Turn your nation into the Iberian Company.",
+        "power_over_200": "Raise your `power` stat to 200 or more.",
+        "popularity_below_minus_75": "Let your `popularity` drop to -75 or lower.",
+        "budget_crisis": "Let `national_budget` fall below zero.",
+    }
+
     def record_choice():
         renpy.store.choice_count = getattr(renpy.store, "choice_count", 0) + 1
         if renpy.store.choice_count % 3 == 0:
             renpy.store.national_budget += renpy.store.taxes
             renpy.notify("Every 3 choices: national budget +{} billion".format(renpy.store.taxes))
+        maybe_award_stat_achievements()
 
 
     def reset_budget_warning_if_positive():
@@ -201,6 +242,14 @@ init python:
                 and getattr(renpy.store, "ach_secret_death_natural", False)
             ):
                 award_achievement("secret_every_death")
+
+    def maybe_award_stat_achievements():
+        if renpy.store.power >= 200:
+            award_achievement("power_over_200")
+        if renpy.store.popularity <= -75:
+            award_achievement("popularity_below_minus_75")
+        if renpy.store.national_budget < 0:
+            award_achievement("budget_crisis")
 
     def set_debug_values():
         renpy.store.education = 1000
@@ -295,6 +344,9 @@ init -2 python:
         "ach_tax_relief": False,
         "ach_corruption_crusader": False,
         "ach_municipal_reformer": False,
+        "ach_power_over_200": False,
+        "ach_popularity_below_minus_75": False,
+        "ach_budget_crisis": False,
         "achievement_defs": renpy.store.achievement_defs if hasattr(renpy.store, "achievement_defs") else {
             "first_decision": "First Decision",
             "assassin": "Assassin",
@@ -326,6 +378,9 @@ init -2 python:
             "municipal_reformer": "Municipal Reformer",
             "reclaim_cuba": "Cuban Reclaimer",
             "the_iberian_company": "The Iberian Company",
+            "power_over_200": "Power Over 200",
+            "popularity_below_minus_75": "Unpopular Leader",
+            "budget_crisis": "Budget Crisis",
         },
     }
 
@@ -400,6 +455,7 @@ screen stats():
             text "Power: [store.power]" size 20
             text "Taxes: [store.taxes] billion" size 20
             text "Playthroughs: [store.playthroughs]" size 20
+            $ maybe_award_stat_achievements()
             textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
             textbutton "Close stats" action Return() xalign 1.0
 
