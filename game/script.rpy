@@ -522,17 +522,18 @@ label start:
     queue music "audio/Hearts of Iron IV - The Attack.mp3"
 
     scene bg dem
-    n "You have been elected by the people to be the president of listenbourg"
+    n "You have been elected by the people to be the president of listenbourg."
     n "Just before you became president, all aliances were disbanded including the UN, EU and Bricks, because of mistrust after a gigantic data leak."
     call screen stats
-    n "In the next few years, you will have to make decisions that will affect the country and its people"
-    n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
-    n "When you press on q, you can view your stats and achievements"
-    n "At the"
+    n "In the next few years, you will have to make decisions that will affect the country and its people."
+    n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop."
+    n "When you press on q, you can view your stats and achievements."
+    n "At the bottom of the screen you see a save button, if you press it, you go to a menu where you can save."
+    n "If saved when you are in the save menu when you press the load button on the left, you can press the save you want to jump to."
     
     show vccap
-    vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
-    p "Hello Vice President, I am ready to listen to your proposal"
+    vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency."
+    p "Hello Vice President, I am ready to listen to your proposal."
 
     $ roll = renpy.random.randint(1, 100)
     if roll <= 1:
