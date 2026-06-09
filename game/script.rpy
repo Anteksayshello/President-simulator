@@ -63,6 +63,7 @@ default ach_completionist = False
 default ach_secret_five_runs = False
 default ach_secret_every_death = False
 default ach_secret_caretaker = False
+default ach_secret_visit_from_israel = False
 default ach_caretaker_education = False
 default ach_caretaker_housing = False
 default ach_caretaker_shelters = False
@@ -111,6 +112,7 @@ init python:
         "secret_five_runs": "Seasoned President",
         "secret_every_death": "Grim Archivist",
         "secret_caretaker": "Caring Steward",
+        "secret_visit_from_israel": "Visit from Israel",
         "nuclear_program": "Nuclear Program",
         "resource_exploiter": "Resource Exploiter",
         "military_regime": "Military Regime",
@@ -171,6 +173,8 @@ init python:
                     "municipal_reformer",
                     "reclaim_cuba",
                     "the_iberian_company",
+                    "secret_visit_from_israel",
+                    
                 ]
                 if all(getattr(renpy.store, "ach_" + a, False) for a in completion_achievements):
                     award_achievement("completionist")
@@ -281,6 +285,7 @@ init -2 python:
         "ach_secret_death_assassination": True,
         "ach_secret_death_accident": True,
         "ach_secret_death_natural": True,
+        "ach_secret_visit_from_israel": False,
         "ach_nuclear_program": False,
         "ach_war_champion": False,
         "ach_resource_exploiter": False,
@@ -2472,6 +2477,7 @@ label israel:
     scene bg dem
     show vccap
     vc "Do you want to give money to Israel?"
+    $ award_achievement("secret_visit_from_israel")
     menu:
         "Approve":
             vc "You have decided to give money to Israel."
