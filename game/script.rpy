@@ -329,7 +329,7 @@ init -2 python:
             setattr(renpy.store, name, value)
 
 screen debug_hotkey():
-    key "d" action ShowMenu("debug_prompt")
+    key "0" action ShowMenu("debug_prompt")
 
 screen debug_prompt():
     modal True
