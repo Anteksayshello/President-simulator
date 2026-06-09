@@ -528,6 +528,7 @@ label start:
     n "In the next few years, you will have to make decisions that will affect the country and its people"
     n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
     n "When you press on q, you can view your stats and achievements"
+    n "At the"
     
     show vccap
     vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
