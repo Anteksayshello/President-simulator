@@ -1,4 +1,4 @@
-﻿# The script of the game goes in this file.
+# The script of the game goes in this file.
 
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
@@ -415,7 +415,7 @@ screen stats():
             text "Taxes: [store.taxes] billion" size 20
             text "Playthroughs: [store.playthroughs]" size 20
             textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
-            textbutton "Close stats" action Hide("stats") xalign 1.0
+            textbutton "Close stats" action Return() xalign 1.0
 
 screen achievements():
 
@@ -3051,8 +3051,8 @@ label lib_cap:
         "Approve": 
             vc "You have decided to promote free enterprise." 
             $ welfare += 10 
-    "Decline": 
-        vc "You have declined to promote free enterprise." 
+        "Decline": 
+            vc "You have declined to promote free enterprise." 
     vc "Would you like to privatize resources?" 
     menu: 
         "Approve": 
@@ -3061,15 +3061,14 @@ label lib_cap:
             vc "This resulted in you losing the power over Listunbourg." 
             jump end 
         "Decline": 
-        vc "You have declined to privatize resources." 
-
+            vc "You have declined to privatize resources." 
     vc "Would you like to expand consumer markets?" 
-        menu: 
-            "Approve": 
-                vc "You have decided to expand consumer markets." 
-                $ taxes += 5 
-            "Decline": 
-                vc "You declined to expand consumer markets." 
+    menu: 
+        "Approve": 
+            vc "You have decided to expand consumer markets." 
+            $ taxes += 5 
+        "Decline": 
+            vc "You declined to expand consumer markets." 
     vc "Would you like to finacialize?"
     menu: 
         "Approve": 
