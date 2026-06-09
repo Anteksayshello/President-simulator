@@ -415,7 +415,7 @@ screen stats():
             text "Taxes: [store.taxes] billion" size 20
             text "Playthroughs: [store.playthroughs]" size 20
             textbutton "Achievements" action ShowMenu("achievements") xalign 0.0
-            textbutton "Close stats" action Hide("stats") xalign 1.0
+            textbutton "Close stats" action Return() xalign 1.0
 
 screen achievements():
 
