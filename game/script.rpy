@@ -662,10 +662,10 @@ label cap:
                 "Approve":
                     vc "You have decided to ignore the angry citizens and continue with your presidency, this will decrease the popularity of the government."
                     $ popularity -= 5
-                    vc "The citizens start a revolution choose the banner you will stand under"
+                    vc "The citizens start a revolution choose the banner you will stand under."
                     menu:
                         "Unite under a monarchy":
-                            vc "You have decided to unite under a monarchy, this will increase the popularity of the government "
+                            vc "You have decided to unite under a monarchy, this will increase the popularity of the government. "
                             $ popularity += 10
                             $ national_budget -= 50
                             jump mon
@@ -683,7 +683,7 @@ label cap:
     label dem1:
         scene bg dem
         show vccap
-        vc "Invest in better healthcare"
+        vc "Would you like to invest in better healthcare?"
         menu:
             "Approve":
                 vc "You have decided to invest in better healthcare, this will increase the welfare of the country but will also decrease the national budget."
@@ -694,7 +694,7 @@ label cap:
             "Decline":
                 vc "You have declined to invest in better healthcare."
                 $ popularity -= 2
-        vc "Invest in better social security"
+        vc "Would you like invest in better social security?"
         menu:
             "Approve":
                 vc "You have decided to invest in better social security, this will increase the welfare of the country but will also decrease the national budget."
@@ -705,7 +705,7 @@ label cap:
             "Decline":
                 vc "You have declined to invest in better social security."
                 $ popularity -= 2
-        vc "Invest in better nutrition for the poor"
+        vc "Would you like to invest in better nutrition for the poor?"
         menu:
             "Approve":
                 vc "You have decided to invest in better nutrition for the poor, this will increase the welfare of the country but will also decrease the national budget."
@@ -769,7 +769,7 @@ label com2:
     scene bg com
     show vccom
     $ ideology = "Communism"
-    vc "You are now a communist country"
+    vc "You are now a communist country."
 
     vc "Would you like to make the media state-owned?"
     menu:
@@ -934,7 +934,7 @@ label com5:
         "Fight":
             $ popularity += 4
 
-    vc "You started a war with Spain"
+    vc "You started a war with Spain."
     if military == 0:
         vc "While fighting the Spanish army, you send everyone to the frontlines and had nobody left to protect you, so Spain was able to assassinate you, you died."
         $ ach_secret_death_assassination = True
