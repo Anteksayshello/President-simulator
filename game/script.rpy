@@ -334,28 +334,10 @@ init -2 python:
             setattr(renpy.store, name, value)
 
 screen debug_hotkey():
-    key "0" action ShowMenu("debug_prompt")
-
-screen debug_prompt():
-    modal True
-
-    frame:
-        xalign 0.5
-        yalign 0.5
-        padding (20, 20)
-
-        vbox:
-            spacing 10
-
-            text "Enter debug command:" size 24 xalign 0.5
-            input value Variable("debug_command_text") allow "abcdefghijklmnopqrstuvwxyz"
-
-            hbox:
-                spacing 20
-                textbutton "Submit" action If(PythonCondition("debug_command_text.lower() == 'debug'"), [SetVariable("debug_command_text", ""), Hide("debug_prompt"), ShowMenu("debug_menu")], Function(renpy.notify, "Invalid command"))
-                textbutton "Cancel" action [SetVariable("debug_command_text", ""), Hide("debug_prompt")]
+    key "=" action ShowMenu("debug_menu")
 
 screen debug_menu():
+    tag menu
 
     frame:
         xalign 0.5
@@ -377,24 +359,23 @@ screen debug_menu():
 
                 textbutton "Edit all values to high test values" action Function(set_debug_values)
                 textbutton "Unlock all achievements" action Function(unlock_all_achievements)
-                textbutton "Close" action Hide("debug_menu")
+                textbutton "Close" action Return()
 
             vbox:
                 xsize 420
                 spacing 6
 
                 text "Jump to" size 18 xalign 0.5
-                textbutton "Start" action [Hide("debug_menu"), Function(renpy.jump, "start")]
-                textbutton "Democracy " action [Hide("debug_menu"), Function(renpy.jump, "begin")]
-                textbutton "Communism " action [Hide("debug_menu"), Function(renpy.jump, "com")]
-                textbutton "Militarism " action [Hide("debug_menu"), Function(renpy.jump, "milr")]
-                textbutton "Anarchism " action [Hide("debug_menu"), Function(renpy.jump, "arch")]
-                textbutton "Socialism " action [Hide("debug_menu"), Function(renpy.jump, "soc")]
-                textbutton "Monarchy " action [Hide("debug_menu"), Function(renpy.jump, "mon")]
-                textbutton "Fascism " action [Hide("debug_menu"), Function(renpy.jump, "fasc1")]
-                textbutton "Colonialismp" action [Hide("debug_menu"), Function(renpy.jump, "col")]
-                textbutton "Final end screen" action [Hide("debug_menu"), Function(renpy.jump, "end")]
-
+                textbutton "Start" action Jump("start")
+                textbutton "Democracy " action Jump("begin")
+                textbutton "Communism " action Jump("com")
+                textbutton "Militarism " action Jump("milr")
+                textbutton "Anarchism " action Jump("arch")
+                textbutton "Socialism " action Jump("soc")
+                textbutton "Monarchy " action Jump("mon")
+                textbutton "Fascism " action Jump("fasc1")
+                textbutton "Colonialismp" action Jump("col")
+                textbutton "Final end screen" action Jump("end")
 screen stats():
 
     tag menu
@@ -527,16 +508,18 @@ label start:
     queue music "audio/Hearts of Iron IV - The Attack.mp3"
 
     scene bg dem
-    n "You have been elected by the people to be the president of listenbourg"
+    n "You have been elected by the people to be the president of listenbourg."
     n "Just before you became president, all aliances were disbanded including the UN, EU and Bricks, because of mistrust after a gigantic data leak."
     call screen stats
-    n "In the next few years, you will have to make decisions that will affect the country and its people"
-    n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop"
-    n "When you press on q, you can view your stats and achievements"
+    n "In the next few years, you will have to make decisions that will affect the country and its people."
+    n "These decision will be presented by your vice president and will have real consequences on the country and on how the country will develop."
+    n "When you press on q, you can view your stats and achievements."
+    n "At the bottom of the screen you see a save button, if you press it, you go to a menu where you can save."
+    n "If saved when you are in the save menu when you press the load button on the left, you can press the save you want to jump to."
     
     show vccap
-    vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency"
-    p "Hello Vice President, I am ready to listen to your proposal"
+    vc "Hello Mr. President, I am your vice president and I will be presenting you the first decision of your presidency."
+    p "Hello Vice President, I am ready to listen to your proposal."
 
     $ roll = renpy.random.randint(1, 100)
     if roll <= 1:
